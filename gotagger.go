@@ -7,6 +7,7 @@ import (
 
 	"github.com/lucasmenendez/gotokenizer"
 	"strings"
+	"fmt"
 )
 
 const (
@@ -72,7 +73,7 @@ func (t *tagger) delStopwords() error {
 	return nil
 }
 
-func (t *tagger) uniques() (uniques []string) {
+func (t *tagger) uniquesWords() (uniques []string) {
 	for _, w := range t.words {
 		var i bool = false
 		for _, u := range uniques {
@@ -90,6 +91,28 @@ func (t *tagger) uniques() (uniques []string) {
 	return uniques
 }
 
+func (t *tagger) uniquesTuples() (uniques []string) {
+	for n := 0; n < len(t.words) - 1; n++ {
+		if t.words[n] != t.words[n + 1] {
+			var w string = fmt.Sprintf("%s %s", t.words[n], t.words[n+1])
+
+			var i bool = false
+			for _, u := range uniques {
+				if w == u {
+					i = true
+					break
+				}
+			}
+
+			if !i {
+				uniques = append(uniques, w)
+			}
+		}
+	}
+
+	return uniques
+}
+
 func (t *tagger) prepare() error {
 	t.clean()
 	if err := t.delStopwords(); err != nil {
@@ -99,9 +122,8 @@ func (t *tagger) prepare() error {
 	return nil
 }
 
-func (t *tagger) tag() {
-	var tags []tag
-	var us = t.uniques()
+func (t *tagger) tagWords() (tags []tag){
+	var us []string = t.uniquesWords()
 	for _, u := range us {
 		var s int = 0
 		for _, w := range t.words {
@@ -110,11 +132,33 @@ func (t *tagger) tag() {
 			}
 		}
 
-		if s >= 0 {
+		if s > 1 {
 			var tg tag = tag{text: u, score: s}
 			tags = append(tags, tg)
 		}
 	}
+
+	return tags
+}
+
+func (t *tagger) tagTuples() (tags []tag){
+	var us []string = t.uniquesTuples()
+	for _, u := range us {
+		var s int = 0
+		for n := 0; n < len(t.words) - 1; n++ {
+			var w string = fmt.Sprintf("%s %s", t.words[n], t.words[n + 1])
+			if u == w {
+				s += 2
+			}
+		}
+
+		if s > 2 {
+			var tg tag = tag{text: u, score: s}
+			tags = append(tags, tg)
+		}
+	}
+
+	return tags
 }
 
 func Tag(lang, text string) (tags []string, err error) {
@@ -123,6 +167,35 @@ func Tag(lang, text string) (tags []string, err error) {
 		return nil, err
 	}
 
-	t.tag()
+	var simple []tag = t.tagWords()
+	var double []tag = t.tagTuples()
+	var res []tag = double
+
+	for _, st := range simple {
+		var i bool = false
+		for _, dt := range double {
+			if strings.Contains(dt.text, st.text) {
+				i = true
+				break
+			}
+		}
+
+		if !i {
+			res = append(res, st)
+		}
+	}
+
+	var av int
+	for _, tg := range res {
+		av += tg.score
+	}
+	av = int(av/len(res))
+
+	for _, tg := range res {
+		if tg.score > av {
+			t.tags = append(t.tags, tg.text)
+		}
+	}
+
 	return t.tags, nil
 }
