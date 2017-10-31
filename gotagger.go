@@ -8,6 +8,7 @@ import (
 	"github.com/lucasmenendez/gotokenizer"
 	"strings"
 	"fmt"
+	"sort"
 )
 
 const (
@@ -18,30 +19,6 @@ type tagger struct {
 	lang, text string
 	words []string
 	tags []string
-}
-
-type tag struct {
-	components []string
-	score int
-}
-
-func distance(s1, s2 string) int {
-	if s1 == s2 {
-		return 0
-	}
-	return 1
-}
-
-func (t1 tag) contains(t2 tag) bool {
-	for _, c1 := range t1.components {
-		for _, c2 := range t2.components {
-			if distance(c1, c2) == 0 {
-				return true
-			}
-		}
-	}
-
-	return false
 }
 
 func (t *tagger) clean() {
@@ -111,19 +88,18 @@ func (t *tagger) uniquesWords() (uniques []string) {
 
 func (t *tagger) uniquesTuples() (uniques [][]string) {
 	for n := 0; n < len(t.words) - 1; n++ {
-		if t.words[n] != t.words[n + 1] {
-			var w string = fmt.Sprintf("%s %s", t.words[n], t.words[n+1])
-
+		if c1, c2 := t.words[n], t.words[n+1]; c1 != c2 {
 			var i bool = false
 			for _, u := range uniques {
-				if w == u {
+				var u1, u2 string = u[0], u[1]
+				if u1 == c1 && u2 == c2 {
 					i = true
 					break
 				}
 			}
 
 			if !i {
-				uniques = append(uniques, w)
+				uniques = append(uniques, []string{c1, c2})
 			}
 		}
 	}
@@ -151,7 +127,7 @@ func (t *tagger) tagWords() (tags []tag){
 		}
 
 		if s > 1 {
-			var tg tag = tag{text: u, score: s}
+			var tg tag = tag{components: []string{u}, score: s}
 			tags = append(tags, tg)
 		}
 	}
@@ -160,18 +136,21 @@ func (t *tagger) tagWords() (tags []tag){
 }
 
 func (t *tagger) tagTuples() (tags []tag){
-	var us []string = t.uniquesTuples()
+	var us [][]string = t.uniquesTuples()
 	for _, u := range us {
+		var ut tag = tag{components: u[:]}
+
 		var s int = 0
 		for n := 0; n < len(t.words) - 1; n++ {
-			var w string = fmt.Sprintf("%s %s", t.words[n], t.words[n + 1])
-			if u == w {
+			var dt tag = tag{components: []string{t.words[n], t.words[n + 1]}}
+
+			if ut.equals(dt) {
 				s += 2
 			}
 		}
 
 		if s > 2 {
-			var tg tag = tag{components: []string{u}, score: s}
+			var tg tag = tag{components: u[:], score: s}
 			tags = append(tags, tg)
 		}
 	}
@@ -209,6 +188,7 @@ func Tag(lang, text string) (tags []string, err error) {
 	}
 	av = int(av/len(res))
 
+	sort.Sort(byScore(res))
 	for _, tg := range res {
 		if tg.score > av {
 			var raw string = strings.Join(tg.components, " ")
