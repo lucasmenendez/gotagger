@@ -1,24 +1,24 @@
 package gotagger
 
 import (
+	"io/ioutil"
 	"path"
 	"regexp"
-	"io/ioutil"
+	"sort"
+	"strings"
 
 	"github.com/lucasmenendez/gotokenizer"
-	"strings"
-	"fmt"
-	"sort"
 )
 
 const (
-	stopwords string = "./stopwords"
+	stopwords   string = "./stopwords"
+	maxKeywords int    = 10
 )
 
 type tagger struct {
 	lang, text string
-	words []string
-	tags []string
+	words      []string
+	tags       []string
 }
 
 func (t *tagger) clean() {
@@ -87,7 +87,7 @@ func (t *tagger) uniquesWords() (uniques []string) {
 }
 
 func (t *tagger) uniquesTuples() (uniques [][]string) {
-	for n := 0; n < len(t.words) - 1; n++ {
+	for n := 0; n < len(t.words)-1; n++ {
 		if c1, c2 := t.words[n], t.words[n+1]; c1 != c2 {
 			var i bool = false
 			for _, u := range uniques {
@@ -116,7 +116,7 @@ func (t *tagger) prepare() error {
 	return nil
 }
 
-func (t *tagger) tagWords() (tags []tag){
+func (t *tagger) tagWords() (tags []tag) {
 	var us []string = t.uniquesWords()
 	for _, u := range us {
 		var s int = 0
@@ -135,17 +135,17 @@ func (t *tagger) tagWords() (tags []tag){
 	return tags
 }
 
-func (t *tagger) tagTuples() (tags []tag){
+func (t *tagger) tagTuples() (tags []tag) {
 	var us [][]string = t.uniquesTuples()
 	for _, u := range us {
 		var ut tag = tag{components: u[:]}
 
 		var s int = 0
-		for n := 0; n < len(t.words) - 1; n++ {
-			var dt tag = tag{components: []string{t.words[n], t.words[n + 1]}}
+		for n := 0; n < len(t.words)-1; n++ {
+			var dt tag = tag{components: []string{t.words[n], t.words[n+1]}}
 
 			if ut.equals(dt) {
-				s += 2
+				s++
 			}
 		}
 
@@ -159,7 +159,7 @@ func (t *tagger) tagTuples() (tags []tag){
 }
 
 func Tag(lang, text string) (tags []string, err error) {
-	var t *tagger = &tagger{lang: lang, text:text}
+	var t *tagger = &tagger{lang: lang, text: text}
 	if err = t.prepare(); err != nil {
 		return nil, err
 	}
@@ -169,15 +169,14 @@ func Tag(lang, text string) (tags []string, err error) {
 	var res []tag = double
 
 	for _, st := range simple {
-		var i bool = false
+		var score int = st.score
 		for _, dt := range double {
 			if dt.contains(st) {
-				i = true
-				break
+				score -= dt.score
 			}
 		}
 
-		if !i {
+		if score > 0 {
 			res = append(res, st)
 		}
 	}
@@ -186,16 +185,19 @@ func Tag(lang, text string) (tags []string, err error) {
 	for _, tg := range res {
 		av += tg.score
 	}
-	av = int(av/len(res))
+	av = int(av / len(res))
 
 	sort.Sort(byScore(res))
 	for _, tg := range res {
 		if tg.score > av {
 			var raw string = strings.Join(tg.components, " ")
-			t.tags = append(t.tags, raw)
-			fmt.Println(tg.score, raw)
+			tags = append(tags, raw)
+		}
+
+		if len(tags) == maxKeywords {
+			break
 		}
 	}
 
-	return t.tags, nil
+	return tags, nil
 }

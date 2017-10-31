@@ -1,105 +1,94 @@
-Tanto entre mis alumnos, como en las conversaciones con otros compañeros del sector, percibo siempre la duda de la necesidad o conveniencia de migrar al Cloud. Y, ciertamente, no es algo sencillo de explicar.
+Por qué los programadores amamos Ethereum
+El espectacular incremento de valor que ha sufrido Ethereum provoca un especial interés por las criptomonedas. En este año 2017, ETH ha pasado de valer unos pocos euros a alcanzar cotas de alrededor 300 euros por unidad. Incluso el inversor más cauto está planteandose invertir.
 
-Muchas veces se generan intensos debates sobre si es una moda, una técnica comercial de las multinacionales para “sacarnos los cuartos” o un camino irresistible al que mejor no presentar una excesiva resistencia.
+Pero Ethereum no es sólo una moneda para especular como las acciones de la bolsa, al menos eso queremos pensar algunos desarrolladores que estamos ilusionados con lo que está por venir.
 
-Por ello, en este artículo quiero resumir los orígenes, razones, procesos y características de los diferentes senderos que deberé recorrer para desplegar mis aplicaciones y servicios en la Nube.
+Las criptomonedas no se crearon para especular con ellas, incluso este afán de hacer dinero a su costa perjudica su principal cometido: crear un sistema distribuido, donde no necesitemos un entidad centralizada (véase los bancos) para realizar operaciones. Esa responsabilidad recae en un blockchain distribuido de miles de nodos por todo el mundo que nos den la misma seguridad o más. De momento, la especulación sirve para financiar parte del proyecto Open Source que sustenta Ethereum y el ecosistema detrás él.
 
-El Porqué de migrar a la nube
+La posibilidad de crear contratos inteligentes ligados a esas transacciones muestra el potencial tremendo de una plataforma que no sólo revolucionará las finanzas sino también internet.
 
-Porque
-Tengo muy claro -al iniciar el camino hacia el Cloud- que el principal motor para abordar los costes y esfuerzos debe ser un modelo de negocio claro, donde la adopción de la Nube se signifique como un mecanismo para incrementar la productividad. Es decir: al Cloud se va a ganar dinero.
+Ethereum quiere hacer el blockchain más que un calculadora
 
-No es buena idea que aborde el aprovecharme de las posibilidades de una infraestructura a la que tendré acceso, si el coste por su uso no es cubierto por un incremento de beneficios o la optimización de los costes.
+La posibilidad de crear contratos inteligentes (smart contracts) ligados a las transferencias es la gran revolución que le espera al sector financiero.
+Ethereum es mucho más que una criptomoneda. De hecho, cuando nos referimos a Ethereum podemos estar hablando del protocolo o la red de nodos que sustenta el sistema. Y la parte más conocida para los no programadores es la moneda Ether, la criptomoneda de Ethereum.
 
-La pregunta no es porqué, realmente es cúando.
-Debo tener en cuenta que, desplegando mis servicios en estas plataformas, me hago beneficiario de precios que solamente se pueden alcanzar en Economía a Escala. Es decir, cuando se habla de adquirir millones o centenas de millones de servidores, está claro que el precio unitario de compra, mantenimiento y operación está muy por debajo de lo que yo podría conseguir en el mercado general. Y esa contención de los costes, se revierte en precios de consumo del Cloud cada vez más bajos y competitivos.
+Lo primero que hace Ethereum es descentralizar el control de la verificación de las transacciones. Describiendo brevemente cómo lo hace, podemos decir que la responsabilidad recae en un blockchain que actúa como una inmensa base de datos distribuida segura y mantenida por una gran cantidad de nodos conectados a lo largo de todo el mundo (los mineros).
 
-La alta disponibilidad, la escalabilidad y la resiliencia, son otras ventajas que emergen de estas plataformas mastodónticas, en donde la disponibilidad de recursos es virtualmente infinita (el límite lo pone mi nivel adquisitivo). Cubriendo las necesidades de la práctica totalidad de los casos de uso, al disponer de la capacidad de replicar cualquier servicio, infraestructura o aplicación que quiera publicar en el Cloud, tantas veces que sea necesario para asegurar niveles de acuerdo de servicio superiores al 99,99%, en cualquier zona geográfica del mundo.
+Los datos son almacenados en bloques, los cuales están enlazados los unos a los otros identificados por un hash generado junto a un timestamp. Toda esa información es inmutable, es decir, nadie puede modificarla. Y aún más está replicada a lo largo de todos los nodos que forma la red.
 
-Otra característica que solamente me ofrece este tipo de plataformas es que la inversión en adquisición, puesta en marcha y crecimiento de mis servicios, es muy inferior a la que tendría que enfrentar en el caso de querer hacerlo con mi propio “hierro”.
+Hasta aquí todo es muy similar a lo que nos encontramos cuando hablamos de Bitcoin. Pero Vitalik Buterin, inventor de Ethereum, ya empezó a diseñar en su white paper sobre Ethereum de 2014 lo que daría un paso más allá a ser una simple calculadora o un gran libro de cuentas.
 
-Aun, incluso, cuando a medio/largo plazo los costes de instalación, administración, mantenimiento y actualización tanto del software como del hardware, puedan llegar a ser similares; a corto plazo (menos de dos años), la Nube es imbatible en los costes de operación, inicio nuevos servicios, o abordar el crecimiento (ya sea imprevisto, constante, puntual, o periódico).
+The key component is this idea of a Turing-complete blockchain. … As a data structure, it works kind of the same way that Bitcoin works, except the difference in Ethereum is, it has this built-in programming language.
 
-Tampoco son baladí las inversiones asociadas para logar un acceso mundial a mis aplicaciones; lo que implica una formidable complejidad técnica y una barrera de entrada, muchas veces insalvable, a nuevos mercados o al crecimiento empresarial. El Cloud, sin embargo, es por naturaleza de ámbito mundial. Siendo, gracias a la redundancia permanente, la plataforma perfecta para publicaciones geo replicadas con acceso vía Web.
+Vitalik Buterin, inventor of Ethereum
 
-El duopolio de facto existente (Amazon 48% - Azure 10%) produce el recelo de poner "todos los huevos en la misma cesta"
-Por último, y no por ello menos importante, las plataformas de Nube liberan de la creciente necesidad de formación, experiencia y conocimiento que se requiere para administrar y evolucionar sistemas informáticos tan complejos como los actuales. Los tiempos del administrador para todo, han quedado atrás. Y el coste de sostener una creciente plantilla que debe estar en formación permanente, no siempre es viable económicamente. Por ello, el delegar estas responsabilidades al Cloud, con los diferentes niveles basados en los tres tipos principales de “sabores” (IaaS, PaaS y SaaS), y el ahorro de costes asociados en personal especializado (sea de plantillas o externo), es otra causa de plantearme la migración de los servicios.
+Ethereum Evolucion
+Smart Contracts en Ethereum
 
-Para qué migrar a la nube
+Los smart contract son ideales para realizar micro-transacciones guiados por eventos verificables por la red.
+Tal como hemos mencionado, Ethereum permite a los desarrolladores crear pequeños contratos inteligentes en el blockchain. Tales piezas de código son autocontenidas y definen el acuerdos entre múltiples partes. Podemos realizar micropagos instantáneamente si se cumple las condiciones por las que fue creado dicho acuerdo.
 
-Questions
-Aunque me repita, el objetivo último de adoptar el Cloud computing es el incrementar los beneficios de la empresa a corto y medio plazo, por medio de la optimización de los costes:
+La gran ventaja es que son inmutables (no pueden ser modificados estando en el blockchain), no necesitan de intervención directa sino que puede mediar y realizar las transferencias monetarias automáticamente.
 
-Disponibilidad del servicio. La mayoría de los negocios se apoyan firmemente en servicios publicados en Internet y/o en aplicaciones/herramientas. De hecho, aún demasiado pocos son plenamente conscientes de lo dependientes que somos de las Tecnologías de la Información hasta que falla algún sistema, o deja de estar disponible. Y este es uno de los objetivos más importantes que se buscan al irse a la Nube: la importancia de tener mi “sistema informático” permanentemente disponible; lo cual gana en criticidad según el impacto que genera en el negocio cada vez que se sufre una incidencia. Llegando incluso, a significar el cierre de la empresa, si la interrupción es lo suficientemente prolongada o crítica.
-Simplificar. Todo lo relacionado con la informática va ganando complejidad según la tecnología y la propia industria va incrementado su madurez (aún es muy joven). El hardware, el software y las herramientas que se crean con ello, son cada vez más numerosas y complejas. Llegando a ser inmantenibles, insostenibles y desconocidas. El concepto de KISS, gana en importancia, y hacer más sencillo las gestiones de los recursos TI se convierte en imprescindible. Así desde el propio concepto de Infraestructura como Servicios, hasta el Software como Servicio, el Cloud ofrece una salida para mitigar la complejidad y su crecimiento.
-Seguridad. Esa es otra preocupación con la que se debe bregar desde el entorno empresarial, por las consecuencias legales y de negocio que ocasionan. Estamos inmersos en la metáfora de “El cañón contra el escudo”, en una verdadera guerra armamentística en el ciberespacio. Y dónde los conocimientos necesarios, en renovación constante y permanente sobre seguridad informática, están atesorados por un número muy limitado de profesionales. Rara es la empresa que puede tener un departamento o personal dedicado en exclusiva a proteger sus sistemas de los llamado cyber-ataques. Así, delegando en el Cloud obtendré acuerdos de seguridad del servicio, con una fracción de la inversión que implicaría subcontratar estos trabajos a empresas externas, o formar mi propio personal.
-Pago por uso. Curiosamente el mayor coste de una infraestructura sobre la que publicar mis servicios, nos es tanto la adquisición, mantenimiento y evolución de la misma, si no la amortización de todas las capacidades que no se utilizan y que deben ser adquiridas igualmente. Por ejemplo, capacidades de cálculo (procesadores y placas madre), memoria (RAM), y almacenamiento que adquiero sobre dimensionadas, para poder soportar picos de trabajo o crecimiento previsto, y que no se utilizan durante largos periodos de tiempo. En Cloud se paga por lo que se usa. Si crezco, el coste es mayor porque estoy consumiendo más recursos para generar más negocio, pero la diferencia la marca la capacidad de reducir la escala, consumiendo menos, y dejando de pagar por aquellos recursos que ya no necesito. Siendo esto una operación con un gran impacto en el ahorro de costes de operación.
-Costes laborales. La simplificación de la plataforma sobre la que funcionan las aplicaciones significa que delego en la Nube la adquisición, instalación, administración, mantenimiento y evolución del hardware y el software – dependiendo del nivel de abstracción de los servicios. Lo que significa una importante reducción de los costes laborales, al liberar ciertos perfiles profesionales de estas tareas. Por ejemplo, no necesitaría tener personal de guardia por si una fuente de alimentación falla.
-Cuándo lanzarse a la nube
+Los smart contract pueden ser empleados en una amplia variedad de escenarios. Son ideales para realizar simples transacciones, en cuyas partes deban estar obligados a un conjunto de requisitos verificables por la red, tanto dentro del blockchain como variables externas mediante APIs.
 
-Calendar
-Podría decir que la mejor respuesta es cuanto antes, pero en realidad hay múltiples factores a tomar en cuenta para iniciar el camino hacia el Cloud.
+Podemos pensar en distintos productos financieros ya existente que tardan días en ser actualizados para ser liquidados como fondos, derivados, futuros, opciones de compra, etc.., pero también cualquier microtransaction que ahora mismo realicemos de forma cotidiana.
 
-Lo primero que debo de asegurar es que el sistema, infraestructura o aplicaciones que quiero publicar en la Nube, sea un sistema estable. Es decir, es un error pensar que un servicio que sufre errores funciona mal o de forma impredecible, va a estabilizarse por irse al Cloud. No solamente no es así, sino que los problemas se pueden hacer aún más complejos y difíciles de resolver, impactando directamente en la operatividad.
+Por ejemplo, podemos desarrollar un smart contract que gestione los derechos de autor del fondo de un banco de imágenes, cada vez que un medio use una de las imágenes para alguna de sus noticias se realizará un micropago de los ETH estipulados.
 
-Otra cosa que debo de mitigar al máximo es la resistencia al cambio que toda organización va a presentar. Desde los profesionales que ven peligrar sus funciones, el usuario final que está acostumbrado a hacer las cosas desde dentro de su zona de confort, hasta el directivo que se resiste a que los datos salgan de debajo de su mesa. Mientras esta resistencia no deje de ser un problema bloqueante, el forzar el cambio solamente añade riesgos de fracaso.
+O en otro uso práctico crear un microseguro que asegure a los agricultores contra la sequía realizando pagos asociados a los datos recogidos de lluvias en un periodo de tiempo.
 
-Los grandes centros de Cloud atráen el talento y experiencia de los mejores. Hay en marcha una nueva transformación de los puestos de trabajo
-El equipo debe estar formado en los procesos de migración, o ser acompañado por consultores con experiencia real y conocimiento profundo del Cloud de destino. El tamaño y número de servicios que ofrecen las Nubes actuales está en continuo incremento, y se necesita “tenerlos por la mano” para poder tomar las decisiones arquitectónicas, de procesos y tecnología sobre las que vamos a construir nuestros servicios.
+Agricultor Ethereum
+Solidity: el lenguaje para programar los smart contract
 
-También las propias circunstancias del negocio me pueden indicar que es el momento del salto. Así podría ser indicio claro el que tenga un bloqueo en el crecimiento (principalmente a causa de los costes de inversión necesarios); o estar por debajo del nivel crítico de disponibilidad y resiliencia en los servicios, que pueda poder en riesgo la viabilidad de la empresa; o que deba abordar complejos y caros procesos de certificación de calidad, seguridad o procesos; o que por fin caiga en cuenta que el sitio más endeble e inseguro para almacenar los datos es debajo de mi mesa.
+Ethereum combina las facetas de networking, app hosting y base de datos para almacenar estados de dichos contratos.
+En Ethereum, los smart contract son programados en Solidity, un lenguaje específicamente creado para tal fin. Digamos que es un batiburrillo de algunas convenciones ya usadas por programadores web y de aplicaciones de red. La sintaxis del código es similar a JavaScript y C.
 
-Aunque, en mi experiencia, casi siempre el pistoletazo de salida proviene de la percepción y conocimiento, por parte del personal técnico, de las ventajas económicas y operativas de la Nube. Transmitiendo a Dirección las ventajas en la relación servicios/costes que ofrece la plataforma.
+Permite compilar dichos contratos en el bytecode utilizado por Ethereum que será desplegado en las máquinas virtuales que representa la combinación de nodos. Es decir, Ethereum Virtual Machine (EVM), las responsables de ejecutar ese código, pequeñas computadoras distribuidas de 256-bits.
 
-Cómo hacerlo
+Se pueden programar esos smart contract localmente y después desplegarlo para que sean propagados alrededor de toda la red siendo alojados de forma descentralizada. En ese sentido, Ethereum combina las facetas de networking, app hosting y base de datos para almacenar estados de dichos contratos.
 
-Obed Na Mrakodrape Top
-Una vez que tenga claro que el Cloud es mi destino, hay que empezar por lo más básico: una valoración del nivel de madurez de nuestra plataforma actual para, en conjunto con negocio y tecnología, definir cuáles serían las aplicaciones y servicios que podríamos desplegar.
+Desplegar aplicaciones en Ethereum no es una tarea trivial, ya que tiene una cierta curva de aprendizaje. Para ello existen herramientas como el browser Mist Browser que permite prototipar los scripts de los smart contract, crear wallets y provee algunas funcionalidad por línea de comandos para comunicar con la red Ethereum.
 
-La primera clasificación, por cada una de ellas, es el esfuerzo que hay que realizar, y que se podría categorizar así:
+Mist Browser Ethereum
+Sobre Solidity puedes encontrar documentación de cómo empezar a programar con él en la propia web del proyecto Ethereum. Además de trastear con algunos ejemplos de smart contract ya creados.
 
-Migración. Muy orientada a IaaS, o máquinas virtuales, en donde despliego los servicios en un entorno tan similar al original, que no tengo que realizar casi ningún cambio. Esta es la forma más sencilla de irme al Cloud, pero también es la que más coste por servicio soporta.
-Transformación. Ya sea como Infraestructura o Plataforma, mis servicios van a requerir ser modificados en mayor o menor medida para ajustarse a las características de la Nube. Un ejemplo es tener que cambiar la forma en que trabajo con los ficheros, al adoptar una cuenta de almacenamiento de Blob en vez de una Carpeta en el Sistema de ficheros. Esto requiere transformación a nivel de código, que será más o menos costosa de acuerdo con la deuda técnica con que me encuentre.
-Reconstrucción. Hay casos en que la transformación exige tantos cambios y tan profundos que puede ser más interesante económicamente y de forma práctica el reconstruir el servicio desde cero o casi. Esto puede suceder si queremos irnos a la versión PaaS o SaaS del Cloud, o aprovecharnos de las capacidades de los servicios serveless, o implantar las arquitecturas de aplicaciones Cloud más correctas (bus de mensajes, cqrs, key Vault, etc.).
-Por último, y no menos importante, decidir no migrar. Aquellas aplicaciones en donde el coste no compense los beneficios de la adopción del Cloud, no deben ser migradas. Como ejemplo típico, es aquella aplicación que funciona sobre Windows XP utilizando drivers hechos a medida y que reproducirlos en un entorno virtual sería difícil y costoso. O aquella aplicación realizada sobre Excel, que su reconstrucción sería inabordable.
-El siguiente paso que realizar, una vez definido si el proyecto de migración tiene sentido y es el momento oportuno para abordarlo, es el realizar pilotos de migración. Esta aproximación tiene un coste muy pequeño (solo se paga por lo que se usa) y permite formarse en los conocimientos necesarios para realizar las transformaciones o reconstrucciones que van a aparecer durante la migración. Tengo que tener muy presente que me voy a enfrentar a las diferencias tanto en la Infraestructura, Sistemas, Telecomunicaciones, Desarrollo de software, Seguridad, etc., en comparación con mi plataforma actual. A lo que he de añadir que, cuanto más alto es el nivel de abstracción, más “específicos” son los cambios y de más calado.
+Cuando tengamos esos smart contracts desplegados podemos empezar a crear una serie de aplicaciones entorno a ellos. Ese es el papel de las distributed application, conocidas como DApp.
 
-Pero si no mido, no podré saber si la plataforma Cloud está bien configurada o mis servicios y aplicaciones funcionan correctamente. Es más, debo definir qué significa “funciona correctamente” o “mejora”, estableciendo el conjunto de métricas y KPI’s que monitorizar, y cuáles son los valores nominales en donde se deben de mantener.
+Las Dapps están compuestas por smart contract que se ejecutan en la red de nodos de Ethereum (el backend). Para que sean fácilmente accesibles, la parte front-end se crea con HTML/CSS/Javascript y puede ser utilizadas a través de un web browser, una aplicación de móvil o un Ethereum Browser, tal como Mist o la línea de comandos usando Geth implementada en GO.
 
-La paciencia es un requisito imprescindible para llevar a buen puerto un complejo proyecto de migración.
-Qué pruebas funcionales, de carga, experiencia de usuario o rendimiento se deben realizar; cuales serán automáticas; cómo se van a reportar; y en que prioridad ejecutar las acciones correctivas. Y cuáles son los valores esperados y aceptables.
+Console 2x
+¿Qué podemos construir a día de hoy en Ethereum?
 
-Por supuesto hay que definir un marco financiero que limite el gasto a valores sostenibles. Pero evitando caer en la falacia de obtener un presupuesto basado en una estimación de las horas y costes previstos; porque en este tipo de migraciones los riesgos, mutabilidad y volatibilidad de las operaciones fuerzan un rango de incertidumbre demasiado amplío para ser útil.
+Más arriba hemos descrito el potencial que posee Ethereum y de algunas de sus herramientas como el propio lenguaje Solidity, los smart contract o el concepto de aplicaciones descentralizadas Dapps y la capacidad de computación que nos permite EMV a través de sus nodos. Ahora vamos a repasar qué podemos hacer a día de hoy, es decir, que tipos de aplicaciones nos estamos encontrando los desarrolladores.
 
-Por ello, es crítico saber el volumen de inversión que estoy dispuesto a asumir; cuales son los puntos de fallo, retorno y no retorno; y las acciones de refinanciación o mitigación de los costes extraordinarios, si los hubiera. Es decir, realizar una gestión de riesgos económicos.
+La mayoría de estas aplicaciones están siendo desarrolladas en la cadena pública, pero a nadie se le impide crear su propio blockhchain privado haciendo un fork de Ethereum, tal como en alguna ocasión hemos hablado de las alt-coin creadas a partir de Blockchain. Pero soy bastante crítico con ese tipo de aplicaciones que más allá de reinventar la rueda entorpecen el desarrollo de Ethereum.
 
-Por último, hay que tener paciencia. Son operaciones técnicas con ramificaciones e implicaciones en todo el negocio. Por lo cual el dicho de “las prisas nunca son buenas consejeras” hay que aplicarlo a rajatabla, e ir cubriendo todos los pasos de forma confiable para llevar a buen término el piloto (primero), y luego las migraciones a producción.
+Wallet 01
+Algunas de las aplicaciones que se pueden conseguir son:
 
-Desventajas
+Enviar y recibir Ether. Obvio y quizás la primera en la que pensariamos. Cualquiera puede conseguir un dirección pública de Ethereum y descargando el wallet de Mist para operar. Existen multitud de wallet alternativos, incluidos en el apps móviles en la Apple Store o Google Play.
 
-No
-Sin duda no existe ninguna tecnología que no tenga desventajas; y la Nube no iba a ser diferente.
+Escribir smart contract: podemos crear apps descentralizadas apoyadas en los smart contract que realicen pagos y transferencias entre cuentas. El verdadero potencial viene de lo grande que llegue a ser la red pública y quien participe alli. Alternativamente, las redes privadas permiten los mismo de forma reservada en un entorno empresarial.
 
-Una de las mayores resistencias aparece cuando nos damos cuenta de que nos convertimos en un cliente cautivo, en donde tenemos una dependencia bastante alta con el proveedor. Es decir, si nos decidimos por los servicios de Amazon, no es transparente ni sencillo el irnos el día de mañana a Azure, o volverlos a traer a nuestra infraestructura privada.
+Crear aplicaciones sin intermediación que aseguren apuestas, o incluso, transforme los típicos puntos obtenidos en juegos a dinero real para gastar sin la necesidad de confiar en un entidad que lo avale o te lo canjee.
 
-Han cambiado las reglas del juego. Ahora, cualquier pequeña empresa puede posicionar sus servicios en Cloud con una inversión inicial mínima
-Al revés, cuanto más abstracta es nuestra plataforma (PaaS o SaaS) más encadenados estamos al proveedor y a su tecnología. Llevándolo a su límite en servicios como Lambdas o Serveless, o las plataformas de publicación de arquitecturas de microservicios. Añadiendo que el límite de nuestros servicios lo impondrá el límite de lo que puede hacerse con el Cloud elegido.
+Crear nuestro propio Token. Aunque nos llevaría más tiempo explicar el concepto de token dentro de la red Ethereum, simplificando la idea podemos crear sub monedas de Ethereum que tengan una validez dentro de nuestro desarrollo u organización. De aqui, ya hemos visto algunos ejemplos como se ha creado ICOs basados en Ethereum utilizando la conversión de token en forma de inversión.
 
-Y aquí tenemos otra desventaja: de facto en la actualidad vivimos un duopolio com Amazon AWS y Microsoft Azure. Es cierto que existen Google y otras Cloud, pero realmente la voz cantante la lleva AWS con casi el 48% del mercado, seguido por Azure con poco más del 10%, y Google con apenas un 3%.
+El futuro: una internet de valor, quizás sea el Internet 3.0
 
-También, como transmito durante todo el artículo, hay que asumir importantes costes monetarios, pero también en horas/hombre, en esfuerzo, en formación y en transformación de la propia empresa. No es el proceso más crítico y complejo al que se enfrentan las empresas, pero no es un proceso sencillo, transparente y barato.
+Ethereum es ya un gran protocolo que permite la creación de smart contract, DApps u organizaciones descentralizadas. Quizás esto nos lleve a nueva estructura del nuevo Internet.
 
-Aquí habría que incluir el impacto en la paz laboral de la empresa. Cloud genera recelos y rechazo en los perfiles técnicos orientados a la administración de sistemas; siendo la decisión de migrar al Cloud causas de conflictos, resistencias al cambio, o transformaciones en la fuerza laboral.
+Web 3 es el término general para referirse una web descentralizada, tal como Web 2 se refiere a las web alojadas en servidores, aplicaciones o servicios. Web 1 se refería a la original World Wide Web, la cual tan solo aloja páginas estáticas.
 
-Conclusión
+Web 3 es una amplia visión en el que Ethereum forma parte importante, aunque no única, pero donde los desarrolladores nos vemos identificados. Hablamos de tres componentes:
 
-Conclusion
-No hay otro camino, ya sea de forma privada, híbrida o en Cloud pública, las ventajas de adoptar la Nube como plataforma sobre la que construir servicios son irrefutables. Y soy de la opinión de que no tiene vuelta atrás.
+Identificación peer-to-peer y un sistema de mensajería
+Datos compartidos a través de un blockchain
+Almacenamiento descentralizado
+Ethereum Alliance
+En todo esto tiene mucho que ver la Enterprise Ethereum Alliance (EEA) una red de académicos, compañías y startups que comparten conocimiento para definir el software necesario para crear aplicaciones que aceleren los negocios. Aquí en esta imagen podéis ver algunos de los miembros, algunos de los negocios tradicionales que verían riesgo en ello están ahí siguiendo de cerca la plataforma Ethereum. Y por supuesto, el creador, Vitalik Buterin, y como suele llamarse en el entorno Open Source a este tipo de figuras, el dictador benevolente.
 
-Creamos en ello o no, vivimos en un mundo hiperconectado, global y público. En dónde el concepto de ventaja competitiva hace emerger grandes corporaciones y destruye a otras, en ciclos tan cortos que ningún economista hubiera creído posible hace unas pocas décadas.
+Del modo en el que vemos Bitcoin como una forma de intercambiar dinero sin intermediación de bancos o entidades financieras tradicionales, Ethereum construye una red descentralizada para crear, por ejemplo, markeplaces de intercambio de servicios como Uber o Ebay. La confianza recae en el blockchain al que podemos tratar con una web 3.0 donde conectarnos para obtener los datos justos y necesarios para crear valor y confianza entre las apps-usuarios.
 
-Y donde la Nube es casi una obligación a causa del cambio en profundidad las reglas del juego que significa el dar acceso universal a servicios del mayor nivel y calidad, anteriormente reservados a las empresas con abultados presupuestos económicos.
-
-Hoy en día, basado en Cloud, montar una Startup o un negocio clásico con unos costes mínimos de TI ya no es una entelequia, es una realidad que se observa en el día a día.
-
-Lo cual me lleva a la conclusión de que la pregunta realmente a contestar es: ¿Cuándo?
+Todo ello lleva a la convergencia de la red con una estructura peer-to-peer y los servicios de la economía compartida.

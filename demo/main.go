@@ -20,6 +20,6 @@ func main() {
 		fmt.Println(err)
 		return
 	} else {
-		fmt.Println(len(tags))
+		fmt.Println(tags)
 	}
 }

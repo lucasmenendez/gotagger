@@ -2,12 +2,13 @@ package gotagger
 
 type tag struct {
 	components []string
-	score int
+	score      int
 }
 
 type byScore []tag
-func (ts byScore) Len() int { return len(ts) }
-func (ts byScore) Swap(i, j int) { ts[i], ts[j] = ts[j], ts[i] }
+
+func (ts byScore) Len() int           { return len(ts) }
+func (ts byScore) Swap(i, j int)      { ts[i], ts[j] = ts[j], ts[i] }
 func (ts byScore) Less(i, j int) bool { return ts[i].score > ts[j].score }
 
 func distance(s1, s2 string) int {
