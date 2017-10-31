@@ -20,8 +20,6 @@ func main() {
 		fmt.Println(err)
 		return
 	} else {
-		for _, t := range tags {
-			fmt.Println(t)
-		}
+		fmt.Println(len(tags))
 	}
 }

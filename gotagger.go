@@ -21,10 +21,28 @@ type tagger struct {
 }
 
 type tag struct {
-	text string
+	components []string
 	score int
 }
 
+func distance(s1, s2 string) int {
+	if s1 == s2 {
+		return 0
+	}
+	return 1
+}
+
+func (t1 tag) contains(t2 tag) bool {
+	for _, c1 := range t1.components {
+		for _, c2 := range t2.components {
+			if distance(c1, c2) == 0 {
+				return true
+			}
+		}
+	}
+
+	return false
+}
 
 func (t *tagger) clean() {
 	var tk []string
@@ -91,7 +109,7 @@ func (t *tagger) uniquesWords() (uniques []string) {
 	return uniques
 }
 
-func (t *tagger) uniquesTuples() (uniques []string) {
+func (t *tagger) uniquesTuples() (uniques [][]string) {
 	for n := 0; n < len(t.words) - 1; n++ {
 		if t.words[n] != t.words[n + 1] {
 			var w string = fmt.Sprintf("%s %s", t.words[n], t.words[n+1])
@@ -153,7 +171,7 @@ func (t *tagger) tagTuples() (tags []tag){
 		}
 
 		if s > 2 {
-			var tg tag = tag{text: u, score: s}
+			var tg tag = tag{components: []string{u}, score: s}
 			tags = append(tags, tg)
 		}
 	}
@@ -174,7 +192,7 @@ func Tag(lang, text string) (tags []string, err error) {
 	for _, st := range simple {
 		var i bool = false
 		for _, dt := range double {
-			if strings.Contains(dt.text, st.text) {
+			if dt.contains(st) {
 				i = true
 				break
 			}
@@ -193,7 +211,9 @@ func Tag(lang, text string) (tags []string, err error) {
 
 	for _, tg := range res {
 		if tg.score > av {
-			t.tags = append(t.tags, tg.text)
+			var raw string = strings.Join(tg.components, " ")
+			t.tags = append(t.tags, raw)
+			fmt.Println(tg.score, raw)
 		}
 	}
 
