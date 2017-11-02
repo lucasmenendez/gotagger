@@ -1,5 +1,7 @@
 package gotagger
 
+import "strings"
+
 const maxLevenshtain = 0.15
 
 type tag struct {
@@ -58,6 +60,7 @@ func levenshtain(w1, w2 string) (diff int) {
 }
 
 func distance(s1, s2 string) float64 {
+	s1, s2 = strings.ToLower(s1), strings.ToLower(s2)
 	return float64(levenshtain(s1, s2)) / (float64(len(s1)+len(s2)) / 2.0)
 }
 
