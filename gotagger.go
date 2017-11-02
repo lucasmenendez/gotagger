@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/lucasmenendez/gotokenizer"
+	"fmt"
 )
 
 const (
@@ -69,7 +70,9 @@ func (t *tagger) delStopwords() error {
 }
 
 func (t *tagger) uniquesWords() (uniques []string) {
-	for _, w := range t.words {
+	for _, rw := range t.words {
+		var w string = strings.ToLower(rw)
+
 		var i bool = false
 		for _, u := range uniques {
 			if w == u {
@@ -88,7 +91,9 @@ func (t *tagger) uniquesWords() (uniques []string) {
 
 func (t *tagger) uniquesTuples() (uniques [][]string) {
 	for n := 0; n < len(t.words)-1; n++ {
-		if c1, c2 := t.words[n], t.words[n+1]; c1 != c2 {
+		if rc1, rc2 := t.words[n], t.words[n+1]; rc1 != rc2 {
+			var c1, c2 string = strings.ToLower(rc1), strings.ToLower(rc2)
+
 			var i bool = false
 			for _, u := range uniques {
 				var u1, u2 string = u[0], u[1]
@@ -103,7 +108,6 @@ func (t *tagger) uniquesTuples() (uniques [][]string) {
 			}
 		}
 	}
-
 	return uniques
 }
 
@@ -138,20 +142,17 @@ func (t *tagger) tagWords() (tags []tag) {
 func (t *tagger) tagTuples() (tags []tag) {
 	var us [][]string = t.uniquesTuples()
 	for _, u := range us {
-		var ut tag = tag{components: u[:]}
-
-		var s int = 0
+		var ut tag = tag{components: u, score: 0}
 		for n := 0; n < len(t.words)-1; n++ {
 			var dt tag = tag{components: []string{t.words[n], t.words[n+1]}}
 
 			if ut.equals(dt) {
-				s++
+				ut.score += 2
 			}
 		}
 
-		if s > 2 {
-			var tg tag = tag{components: u[:], score: s}
-			tags = append(tags, tg)
+		if ut.score > 4 {
+			tags = append(tags, ut)
 		}
 	}
 
@@ -166,20 +167,7 @@ func Tag(lang, text string) (tags []string, err error) {
 
 	var simple []tag = t.tagWords()
 	var double []tag = t.tagTuples()
-	var res []tag = double
-
-	for _, st := range simple {
-		var score int = st.score
-		for _, dt := range double {
-			if dt.contains(st) {
-				score -= dt.score
-			}
-		}
-
-		if score > 0 {
-			res = append(res, st)
-		}
-	}
+	var res []tag = union(simple, double)
 
 	var av int
 	for _, tg := range res {
@@ -192,6 +180,8 @@ func Tag(lang, text string) (tags []string, err error) {
 		if tg.score > av {
 			var raw string = strings.Join(tg.components, " ")
 			tags = append(tags, raw)
+
+			fmt.Println(raw, tg.score)
 		}
 
 		if len(tags) == maxKeywords {
