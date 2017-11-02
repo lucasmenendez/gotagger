@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/lucasmenendez/gotokenizer"
-	"fmt"
 )
 
 const (
@@ -69,26 +68,6 @@ func (t *tagger) delStopwords() error {
 	return nil
 }
 
-func (t *tagger) uniquesWords() (uniques []string) {
-	for _, rw := range t.words {
-		var w string = strings.ToLower(rw)
-
-		var i bool = false
-		for _, u := range uniques {
-			if w == u {
-				i = true
-				break
-			}
-		}
-
-		if !i {
-			uniques = append(uniques, w)
-		}
-	}
-
-	return uniques
-}
-
 func (t *tagger) uniquesTuples() (uniques [][]string) {
 	for n := 0; n < len(t.words)-1; n++ {
 		if rc1, rc2 := t.words[n], t.words[n+1]; rc1 != rc2 {
@@ -121,18 +100,31 @@ func (t *tagger) prepare() error {
 }
 
 func (t *tagger) tagWords() (tags []tag) {
-	var us []string = t.uniquesWords()
-	for _, u := range us {
-		var s int = 0
-		for _, w := range t.words {
-			if u == w {
-				s++
+	var candidates []tag
+	for i, w1 := range t.words {
+		var t1 tag = tag{components: []string{w1}}
+		for j, w2 := range t.words {
+			var t2 tag = tag{components: []string{w2}}
+			if i != j && t1.equals(t2) {
+				t1.score++
+			}
+		}
+		if t1.score > 0 {
+			candidates = append(candidates, t1)
+		}
+	}
+
+	for _, c := range candidates {
+		var s bool = false
+		for _, t := range tags {
+			if c.equals(t) {
+				s = true
+				break
 			}
 		}
 
-		if s > 1 {
-			var tg tag = tag{components: []string{u}, score: s}
-			tags = append(tags, tg)
+		if !s {
+			tags = append(tags, c)
 		}
 	}
 
@@ -140,19 +132,34 @@ func (t *tagger) tagWords() (tags []tag) {
 }
 
 func (t *tagger) tagTuples() (tags []tag) {
-	var us [][]string = t.uniquesTuples()
-	for _, u := range us {
-		var ut tag = tag{components: u, score: 0}
-		for n := 0; n < len(t.words)-1; n++ {
-			var dt tag = tag{components: []string{t.words[n], t.words[n+1]}}
+	var candidates []tag
+	for i := 0; i < len(t.words)-1; i++ {
+		var t1 tag = tag{components: []string{t.words[i], t.words[i+1]}}
 
-			if ut.equals(dt) {
-				ut.score += 2
+		for j := 0; j < len(t.words)-1; j++ {
+			var t2 tag = tag{components: []string{t.words[j], t.words[j+1]}}
+
+			if i != j && t1.equals(t2) {
+				t1.score++
 			}
 		}
 
-		if ut.score > 4 {
-			tags = append(tags, ut)
+		if t1.score > 0 {
+			candidates = append(candidates, t1)
+		}
+	}
+
+	for _, c := range candidates {
+		var s bool = false
+		for _, t := range tags {
+			if c.equals(t) {
+				s = true
+				break
+			}
+		}
+
+		if !s {
+			tags = append(tags, c)
 		}
 	}
 
@@ -167,7 +174,19 @@ func Tag(lang, text string) (tags []string, err error) {
 
 	var simple []tag = t.tagWords()
 	var double []tag = t.tagTuples()
-	var res []tag = union(simple, double)
+	var res []tag = double
+	for _, s := range simple {
+		var score int = s.score
+		for _, d := range double {
+			if d.contains(s) {
+				score -= d.score
+			}
+		}
+
+		if score > 0 {
+			res = append(res, s)
+		}
+	}
 
 	var av int
 	for _, tg := range res {
@@ -180,8 +199,6 @@ func Tag(lang, text string) (tags []string, err error) {
 		if tg.score > av {
 			var raw string = strings.Join(tg.components, " ")
 			tags = append(tags, raw)
-
-			fmt.Println(raw, tg.score)
 		}
 
 		if len(tags) == maxKeywords {
