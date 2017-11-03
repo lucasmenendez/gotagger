@@ -68,28 +68,6 @@ func (t *tagger) delStopwords() error {
 	return nil
 }
 
-func (t *tagger) uniquesTuples() (uniques [][]string) {
-	for n := 0; n < len(t.words)-1; n++ {
-		if rc1, rc2 := t.words[n], t.words[n+1]; rc1 != rc2 {
-			var c1, c2 string = strings.ToLower(rc1), strings.ToLower(rc2)
-
-			var i bool = false
-			for _, u := range uniques {
-				var u1, u2 string = u[0], u[1]
-				if u1 == c1 && u2 == c2 {
-					i = true
-					break
-				}
-			}
-
-			if !i {
-				uniques = append(uniques, []string{c1, c2})
-			}
-		}
-	}
-	return uniques
-}
-
 func (t *tagger) prepare() error {
 	t.clean()
 	if err := t.delStopwords(); err != nil {
@@ -127,7 +105,6 @@ func (t *tagger) tagWords() (tags []tag) {
 			tags = append(tags, c)
 		}
 	}
-
 	return tags
 }
 
@@ -172,19 +149,27 @@ func Tag(lang, text string) (tags []string, err error) {
 		return nil, err
 	}
 
+	var res []tag
 	var simple []tag = t.tagWords()
 	var double []tag = t.tagTuples()
-	var res []tag = double
-	for _, s := range simple {
-		var score int = s.score
-		for _, d := range double {
-			if d.contains(s) {
-				score -= d.score
-			}
-		}
+	if len(simple) + len(double) == 0 {
+		return []string{}, nil
+	}
 
-		if score > 0 {
-			res = append(res, s)
+	if res = double; len(double) == 0 {
+		res = simple
+	} else if len(simple) != 0 {
+		for _, s := range simple {
+			var score int = s.score
+			for _, d := range double {
+				if d.contains(s) {
+					score -= d.score
+				}
+			}
+
+			if score > 0 {
+				res = append(res, s)
+			}
 		}
 	}
 
