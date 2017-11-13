@@ -8,6 +8,8 @@ import (
 	"strings"
 
 	"github.com/lucasmenendez/gotokenizer"
+	"log"
+	"os"
 )
 
 const (
@@ -24,7 +26,8 @@ type tagger struct {
 func (t *tagger) clean() {
 	var tk []string
 	for _, s := range gotokenizer.Sentences(t.text) {
-		tk = append(tk, s...)
+		var ts []string = gotokenizer.Words(s)
+		tk = append(tk, ts...)
 	}
 
 	var cleanR *regexp.Regexp = regexp.MustCompile(`¿|\?|!|¡|\.|,|"|'|:|;|<|>|-`)
@@ -35,46 +38,41 @@ func (t *tagger) clean() {
 	}
 }
 
-func (t *tagger) delStopwords() error {
-	var sws []string
+func (t *tagger) delStopwords(ws []tag) (candidates []tag, err error) {
+	var f string
+	if base := os.Getenv("STOPWORDS"); base != "" {
+		f = path.Join(base, t.lang)
+	} else {
+		f = path.Join(stopwords, t.lang)
+	}
 
-	var f string = path.Join(stopwords, t.lang)
+	var sws []tag
 	if b, err := ioutil.ReadFile(f); err != nil {
-		return err
+		return nil, err
 	} else {
 		var lbr *regexp.Regexp = regexp.MustCompile(`\n`)
 		for _, sw := range lbr.Split(string(b), -1) {
-			sws = append(sws, strings.TrimSpace(sw))
+
+			var w tag = tag{components: []string{strings.TrimSpace(sw)}}
+			sws = append(sws, w)
 		}
 	}
 
-	var words []string
-	for _, w := range t.words {
-		var lw = strings.ToLower(w)
+	for _, w := range ws {
 		var issw bool = false
 		for _, sw := range sws {
-			if lw == sw {
+			if w.contains(sw) {
 				issw = true
 				break
 			}
 		}
 
 		if !issw {
-			words = append(words, w)
+			candidates = append(candidates, w)
 		}
 	}
 
-	t.words = words
-	return nil
-}
-
-func (t *tagger) prepare() error {
-	t.clean()
-	if err := t.delStopwords(); err != nil {
-		return err
-	}
-
-	return nil
+	return candidates, nil
 }
 
 func (t *tagger) tagWords() (tags []tag) {
@@ -90,6 +88,11 @@ func (t *tagger) tagWords() (tags []tag) {
 		if t1.score > 0 {
 			candidates = append(candidates, t1)
 		}
+	}
+
+	var err error
+	if candidates, err = t.delStopwords(candidates); err != nil {
+		log.Println(err)
 	}
 
 	for _, c := range candidates {
@@ -126,6 +129,11 @@ func (t *tagger) tagTuples() (tags []tag) {
 		}
 	}
 
+	var err error
+	if candidates, err = t.delStopwords(candidates); err != nil {
+		log.Println(err)
+	}
+
 	for _, c := range candidates {
 		var s bool = false
 		for _, t := range tags {
@@ -145,14 +153,12 @@ func (t *tagger) tagTuples() (tags []tag) {
 
 func Tag(lang, text string) (tags []string, err error) {
 	var t *tagger = &tagger{lang: lang, text: text}
-	if err = t.prepare(); err != nil {
-		return nil, err
-	}
+	t.clean()
 
 	var res []tag
 	var simple []tag = t.tagWords()
 	var double []tag = t.tagTuples()
-	if len(simple) + len(double) == 0 {
+	if len(simple)+len(double) == 0 {
 		return []string{}, nil
 	}
 

@@ -6,6 +6,8 @@ Simple keyword extraction
 go install github.com/lucasmenendez/gotagger
 ```
 
+Then, set env var `STOPWORDS` to stopword lists path or store it into existing folder.
+
 ## Demo
 ````go
 package main
