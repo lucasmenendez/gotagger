@@ -10,6 +10,7 @@ import (
 	"github.com/lucasmenendez/gotokenizer"
 	"log"
 	"os"
+	"strconv"
 )
 
 const (
@@ -179,6 +180,13 @@ func Tag(lang, text string) (tags []string, err error) {
 		}
 	}
 
+	var max int
+	if rmax := os.Getenv("MAX_KEYWORDS"); rmax != "" {
+		if max, _ = strconv.Atoi(rmax); err != nil {
+			max = maxKeywords
+		}
+	}
+
 	var av int
 	for _, tg := range res {
 		av += tg.score
@@ -192,7 +200,7 @@ func Tag(lang, text string) (tags []string, err error) {
 			tags = append(tags, raw)
 		}
 
-		if len(tags) == maxKeywords {
+		if len(tags) == max {
 			break
 		}
 	}
