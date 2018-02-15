@@ -13,26 +13,24 @@ Then, set env var `STOPWORDS` to stopword lists path or store it into existing f
 package main
 
 import (
-	"fmt"
-	"github.com/lucasmenendez/gotokenizer"
-	"github.com/lucasmenendez/gotagger"
+    "fmt"
+    "github.com/lucasmenendez/gotokenizer"
+    "github.com/lucasmenendez/gotagger"
 )
 
 func main() {
-	var limit int = 15
-	var text, lang string = "<input-text>", "<input-lang>"
-	
-	sentences := gotokenizer.Sentences(text)
+    var limit int = 15
+    var text, lang string = "<input-text>", "<input-lang>"
     
     var words [][]string
-    for _, s := range sentences {
+    for _, s := range gotokenizer.Sentences(text) {
         words = append(words, gotokenizer.Words(s))
     }
-
+    
     if tags, err := gotagger.GetTags(words, lang, limit); err != nil {
         fmt.Println(err)
     } else {
-    	fmt.Printf("%q\n", tags)
+        fmt.Printf("%q\n", tags)
     }
 }
 ````
