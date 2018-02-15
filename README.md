@@ -6,7 +6,9 @@ Simple keyword extraction
 go install github.com/lucasmenendez/gotagger
 ```
 
-Then, set env var `STOPWORDS` to stopword lists path or store it into existing folder.
+### Stopwords
+If you want to extend stopword list, create a file with named as language code into a any folder (for example: `en` file will contain English stopwors). Then, set env var `STOPWORDS` to that folder path.
+Extended stopword lists can be found in [Stopwords ISO profile](https://github.com/stopwords-iso).
 
 ## Demo
 ````go
