@@ -14,16 +14,25 @@ package main
 
 import (
 	"fmt"
+	"github.com/lucasmenendez/gotokenizer"
 	"github.com/lucasmenendez/gotagger"
 )
 
 func main() {
+	var limit int = 15
 	var text, lang string = "<input-text>", "<input-lang>"
-	if tags, err := gotagger.Tag(lang, text); err != nil {
-		fmt.Println(err)
-		return
-	} else {
-		fmt.Println(tags)
-	}
+	
+	sentences := gotokenizer.Sentences(text)
+    
+    var words [][]string
+    for _, s := range sentences {
+        words = append(words, gotokenizer.Words(s))
+    }
+
+    if tags, err := gotagger.GetTags(words, lang, limit); err != nil {
+        fmt.Println(err)
+    } else {
+    	fmt.Printf("%q\n", tags)
+    }
 }
 ````
