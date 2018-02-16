@@ -22,7 +22,8 @@ import (
 
 func main() {
     var limit int = 15
-    var text, lang string = "<input-text>", "<input-lang>"
+    var lang string = "<input-lang>"
+    var text string = "<input-text>"
     
     var words [][]string
     for _, s := range gotokenizer.Sentences(text) {
