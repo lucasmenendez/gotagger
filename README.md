@@ -7,7 +7,7 @@ go install github.com/lucasmenendez/gotagger
 ```
 
 ### Stopwords
-If you want to extend stopword list, create a file with named as language code into a any folder (for example: `en` file will contain English stopwors). Then, set env var `STOPWORDS` to that folder path.
+If you want to extend stopword list, create a file, named as language code, into a any folder (for example: `en` file will contain English stopwords). Then, set env var `STOPWORDS` to that folder path.
 Extended stopword lists can be found in [Stopwords ISO profile](https://github.com/stopwords-iso).
 
 ## Demo
