@@ -2,9 +2,9 @@ package gotagger
 
 import (
 	"os"
-	"path"
 	"errors"
 	"bufio"
+	"path/filepath"
 )
 
 var supported = map[string][]string{
@@ -54,17 +54,20 @@ var supported = map[string][]string{
 	},
 }
 
+// Struct to define language object with its code and stopwords
 type language struct {
 	code string
 	stopwords []string
 }
 
+// Loads language checking 'STOPWORDS' environment variable path and loading list from local storage if exists
+// or assigns default list. Receives language code. Return language struct or error.
 func loadLanguage(code string) (language, error) {
 	var err error
 	var stopwords []string
 
 	if env := os.Getenv("STOPWORDS"); env != "" {
-		var f string = path.Join(env, code)
+		var f string = filepath.Join(env, code)
 
 		var fd *os.File
 		if fd, err = os.Open(f); err != nil {

@@ -1,18 +1,20 @@
+// Extract top occurrences words or group of words
 package gotagger
 
 import "sort"
 
-func GetTags(tokens [][]string, lang string, limit int) (tags [][]string, err error) {
-	var (
-		unigrams [][]string = ngrams(tokens, 1)
-		bigrams [][]string = ngrams(tokens, 2)
-		trigrams [][]string  = ngrams(tokens, 3)
-	)
+// Returns list of tags generating ngrams (from trigrams to unigrams) and count occurrences.
+// Recives list of tokens lists, language code and limit of tags. Return list of tags and error.
+func GetTags(text [][]string, lang string, limit int) (tags [][]string, err error) {
+	var tokens []string
+	for _, sentence := range text {
+		tokens = append(tokens, sentence...)
+	}
 
-	var ngrams [][]string = append(unigrams, append(bigrams, trigrams...)...)
+	var ngrms [][]string = ngramsRecursive(tokens, 3)
 
 	var t *tagger
-	if t, err = newTagger(ngrams, "es"); err != nil {
+	if t, err = newTagger(ngrms, lang); err != nil {
 		return tags, err
 	}
 
