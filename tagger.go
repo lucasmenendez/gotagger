@@ -6,104 +6,107 @@ import (
 	"strings"
 )
 
-// Struct to define 'tagger' with tag candidates and language definition
+// Struct to define 'tagger' with tag candidates and language definition.
 type tagger struct {
 	lang language
 	tags []tag
 }
 
-// newTagger function constructs a new 'tagger', converting words to tags and initializing language struct based
-// on code received. Receives words matrix and language code. Return 'tagger' pointer and error.
-func newTagger(words [][]string, code string) (t *tagger, err error) {
-	var lang language
-	if lang, err = loadLanguage(code); err != nil {
-		return &tagger{}, err
+// newTagger function constructs a new 'tagger', converting words to tags and
+// initializing language struct based on code received. Receives words matrix
+// and language code. Return 'tagger' pointer and error.
+func newTagger(ws [][]string, code string) (t *tagger, e error) {
+	var l language
+	if l, e = loadLanguage(code); e != nil {
+		return &tagger{}, e
 	}
 
-	if len(words) == 0 {
+	if len(ws) == 0 {
 		return t, errors.New("no words, provided")
 	}
 
 	var tags []tag
-	for _, w := range words {
+	for _, w := range ws {
 		if len(w) > 0 {
 			tags = append(tags, tag{w, 0})
 		}
 	}
 
-	t = &tagger{lang, tags}
+	t = &tagger{l, tags}
 	t.prepare()
 
-	return t, err
+	return t, e
 }
 
-// prepare function delete special symbols from each tag from tagger. Then check if each tag contains stopwords
-// in boundary components.
+// prepare function delete special symbols from each tag from tagger. Then check
+// if each tag contains stopwords in boundary components.
 func (t *tagger) prepare() {
-	var rgx *regexp.Regexp = regexp.MustCompile(`(\s|"|\.\.\.|\.|,|:|\(|\)|\[|\]|\{|\}|¿|\?|¡|\!|[0-9]+\.[0-9]+)`)
 
-	var replaced []tag
-	for _, item := range t.tags {
-		var temp []string
+	var re *regexp.Regexp = regexp.MustCompile(`(\s|"|\.\.\.|\.|,|:|\(|\)|\[|\]|\{|\}|¿|\?|¡|\!|[0-9]+\.[0-9]+)`)
 
-		for _, component := range item.components {
-			if rgx.MatchString(component) {
-				var candidate string = rgx.ReplaceAllString(component, "")
+	var r []tag
+	for _, i := range t.tags {
+		var _c []string
+
+		for _, c := range i.components {
+			if re.MatchString(c) {
+				var candidate string = re.ReplaceAllString(c, "")
 				if candidate != "" {
-					component = candidate
+					c = candidate
 				} else {
 					continue
 				}
 			}
 
-			temp = append(temp, component)
+			_c = append(_c, c)
 		}
 
-		if len(temp) > 0 {
-			item.components = temp
-			replaced = append(replaced, item)
+		if len(_c) > 0 {
+			i.components = _c
+			r = append(r, i)
 		}
 	}
 
-	var processed []tag
-	for _, item := range replaced {
-		var contained bool = false
-		if len(item.components) <= 2 {
-			for _, stopword := range t.lang.stopwords {
-				contained = contained || item.containsString(stopword, false)
+	var p []tag
+	for _, i := range r {
+		var in bool = false
+		if len(i.components) <= 2 {
+			for _, stw := range t.lang.stopwords {
+				in = in || i.containsString(stw, false)
 			}
 		} else {
 			var (
-				_cs string = strings.ToLower(item.components[0])
-				_ce string = strings.ToLower(item.components[len(item.components)-1])
+				_cs string = strings.ToLower(i.components[0])
+				_ce string = strings.ToLower(i.components[len(i.components)-1])
 			)
 
 			for _, stopword := range t.lang.stopwords {
 				_s := strings.ToLower(stopword)
-				contained = contained || _s == _cs || _s == _ce
+				in = in || _s == _cs || _s == _ce
 			}
 		}
 
-		if !contained {
-			processed = append(processed, item)
+		if !in {
+			p = append(p, i)
 		}
 	}
 
-	t.tags = processed
+	t.tags = p
 }
 
-// score functions scores each tag from tagger, counting its occurrences. First obtains unique tags, then score all
-// tags and them assigns scores to same tag from unique list. Then weights multi word tag with individual scores.
-func (t *tagger) score() (scored []tag) {
-	var uniques []tag
-	for _, item := range t.tags {
-		var exist bool = false
-		for _, unique := range uniques {
-			exist = exist || unique.containsTag(item, true)
+// score functions scores each tag from tagger, counting its occurrences. First
+// obtains unique tags, then score all tags and them assigns scores to same tag
+// from unique list. Then weights multi word tag with individual scores.
+func (t *tagger) score() (s []tag) {
+	var us []tag
+	for _, i := range t.tags {
+		var in bool = false
+		for _, u := range us {
+			in = in || u.containsTag(i, true)
 		}
 
-		if !exist {
-			uniques = append(uniques, item)
+		if !in {
+			us = append(us, i)
 		}
 	}
 
@@ -118,23 +121,24 @@ func (t *tagger) score() (scored []tag) {
 			continue
 		}
 
-		for pos, unique := range uniques {
-			if unique.score == 0 && unique.containsTag(ti, true) {
-				scored = append(scored, ti)
-				uniques[pos].score += ti.score
+		for pos, u := range us {
+			if u.score == 0 && u.containsTag(ti, true) {
+				s = append(s, ti)
+				us[pos].score += ti.score
 				break
 			}
 		}
 	}
 
-	for i, ti := range scored {
-		for j, tj := range scored {
-			if len(ti.components) > len(tj.components) && ti.containsTag(tj, false) {
-				scored[i].score += scored[j].score
-				scored[j].score -= ti.count(tj)
+	for i, ti := range s {
+		var lti int = len(ti.components)
+		for j, tj := range s {
+			if lti > len(tj.components) && ti.containsTag(tj, false) {
+				s[i].score += s[j].score
+				s[j].score -= ti.count(tj)
 			}
 		}
 	}
 
-	return scored
+	return s
 }

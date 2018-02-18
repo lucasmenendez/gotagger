@@ -3,32 +3,33 @@ package gotagger
 
 import "sort"
 
-// GetTags function returns list of tags generating ngrams (from trigrams to unigrams) and count occurrences.
-// Receives list of tokens lists, language code and limit of tags. Return list of tags and error.
-func GetTags(text [][]string, lang string, limit int) (tags [][]string, err error) {
+// GetTags function returns list of tags generating ngrams (from trigrams to
+// unigrams) and count occurrences. Receives list of tokens lists,
+// language code and limit of tags. Return list of tags and error.
+func GetTags(txt [][]string, lang string, max int) (tags [][]string, e error) {
 	var tokens []string
-	for _, sentence := range text {
-		tokens = append(tokens, sentence...)
+	for _, s := range txt {
+		tokens = append(tokens, s...)
 	}
 
-	var ngrms [][]string = ngramsRecursive(tokens, 3)
+	var n [][]string = ngramsRecursive(tokens, 3)
 
 	var t *tagger
-	if t, err = newTagger(ngrms, lang); err != nil {
-		return tags, err
+	if t, e = newTagger(n, lang); e != nil {
+		return tags, e
 	}
 
-	scored := t.score()
-	sort.Sort(byScore(scored))
+	s := t.score()
+	sort.Sort(byScore(s))
 
-	var limited []tag = scored
-	if len(scored) > limit {
-		limited = limited[:limit]
+	var l []tag = s
+	if len(s) > max {
+		l = l[:max]
 	}
 
-	for _, i := range limited {
+	for _, i := range l {
 		tags = append(tags, i.components)
 	}
 
-	return tags, err
+	return tags, e
 }
