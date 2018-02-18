@@ -1,4 +1,4 @@
-[![GoDoc](https://img.shields.io/badge/GoDoc-reference-5272B4.svg)](https://godoc.org/github.com/lucasmenendez/gotagger)
+[![GoDoc](https://godoc.org/github.com/lucasmenendez/gotagger?status.svg)](https://godoc.org/github.com/lucasmenendez/gotagger)
 [![Build Status](https://travis-ci.org/lucasmenendez/gotagger.svg?branch=master)](https://travis-ci.org/lucasmenendez/gotagger)
 [![Report](https://goreportcard.com/badge/github.com/lucasmenendez/gotagger)](https://goreportcard.com/report/github.com/lucasmenendez/gotagger)
 
