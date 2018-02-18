@@ -6,16 +6,20 @@ import (
 	"strings"
 )
 
+const SYMBOL_PATTERN string =  `(\s|"|\.\.\.|\.|,|:|;|\(|\)|\[|\]|\{|\}|¿|\?|¡|\!|[0-9]+\.[0-9]+)`
+
 // Struct to define 'tagger' with tag candidates and language definition.
 type tagger struct {
 	lang language
-	tags []tag
+	pattern string
+	uniques []tag
+	candidates []tag
 }
 
 // newTagger function constructs a new 'tagger', converting words to tags and
 // initializing language struct based on code received. Receives words matrix
 // and language code. Return 'tagger' pointer and error.
-func newTagger(ws [][]string, code string) (t *tagger, e error) {
+func newTagger(ws []string, code string) (t *tagger, e error) {
 	var l language
 	if l, e = loadLanguage(code); e != nil {
 		return &tagger{}, e
@@ -26,30 +30,35 @@ func newTagger(ws [][]string, code string) (t *tagger, e error) {
 	}
 
 	var tags []tag
-	for _, w := range ws {
+	var ngrms [][]string = ngramsRecursive(ws, 3)
+	for _, w := range ngrms {
 		if len(w) > 0 {
 			tags = append(tags, tag{w, 0})
 		}
 	}
 
-	t = &tagger{l, tags}
-	t.prepare()
+	t = &tagger{ lang: l, pattern: SYMBOL_PATTERN }
+	var c []tag = t.clean(tags)
+	var s []tag = t.simplify(c)
+	t.prepare(s)
 
 	return t, e
 }
 
-// prepare function delete special symbols from each tag from tagger. Then check
-// if each tag contains stopwords in boundary components.
-func (t *tagger) prepare() {
+func (t *tagger) clean(tags []tag) (r []tag) {
+	var re *regexp.Regexp = regexp.MustCompile(t.pattern)
 
-	var re *regexp.Regexp = regexp.MustCompile(`(\s|"|\.\.\.|\.|,|:|\(|\)|\[|\]|\{|\}|¿|\?|¡|\!|[0-9]+\.[0-9]+)`)
-
-	var r []tag
-	for _, i := range t.tags {
+	for _, i := range tags {
 		var _c []string
 
-		for _, c := range i.components {
+		var min, max int = 0, len(i.components) - 1
+		for p, c := range i.components {
 			if re.MatchString(c) {
+				if p != min && p != max {
+					_c = []string{}
+					break
+				}
+
 				var candidate string = re.ReplaceAllString(c, "")
 				if candidate != "" {
 					c = candidate
@@ -67,7 +76,10 @@ func (t *tagger) prepare() {
 		}
 	}
 
-	var p []tag
+	return r
+}
+
+func (t *tagger) simplify(r []tag) (s []tag) {
 	for _, i := range r {
 		var in bool = false
 		if len(i.components) <= 2 {
@@ -87,32 +99,44 @@ func (t *tagger) prepare() {
 		}
 
 		if !in {
-			p = append(p, i)
+			s = append(s, i)
 		}
 	}
 
-	t.tags = p
+	return s
+}
+
+// prepare function delete special symbols from each tag from tagger. Then check
+// if each tag contains stopwords in boundary components.
+func (t *tagger) prepare(p []tag) {
+	var uqs, cdt []tag
+
+	for _, i := range p {
+		if len(i.components) == 1 {
+			cdt = append(cdt, i)
+		}
+
+		var in bool = false
+		for _, c := range uqs {
+			in = in || c.containsTag(i, true)
+		}
+
+		if !in {
+			uqs = append(uqs, i)
+		}
+	}
+
+	t.uniques = uqs
+	t.candidates = cdt
 }
 
 // score functions scores each tag from tagger, counting its occurrences. First
 // obtains unique tags, then score all tags and them assigns scores to same tag
 // from unique list. Then weights multi word tag with individual scores.
 func (t *tagger) score() (s []tag) {
-	var us []tag
-	for _, i := range t.tags {
-		var in bool = false
-		for _, u := range us {
-			in = in || u.containsTag(i, true)
-		}
-
-		if !in {
-			us = append(us, i)
-		}
-	}
-
-	for i, ti := range t.tags {
-		for j, tj := range t.tags {
-			if j != i && ti.containsTag(tj, true) {
+	for i, ti := range t.candidates {
+		for j, tj := range t.candidates {
+			if j != i && ti.similar(tj) {
 				ti.score += 1
 			}
 		}
@@ -121,22 +145,22 @@ func (t *tagger) score() (s []tag) {
 			continue
 		}
 
-		for pos, u := range us {
-			if u.score == 0 && u.containsTag(ti, true) {
-				s = append(s, ti)
-				us[pos].score += ti.score
+		for pos, u := range t.uniques {
+			if u.similar(ti) {
+				t.uniques[pos].score += ti.score
 				break
 			}
 		}
 	}
 
-	for i, ti := range s {
-		var lti int = len(ti.components)
-		for j, tj := range s {
-			if lti > len(tj.components) && ti.containsTag(tj, false) {
-				s[i].score += s[j].score
-				s[j].score -= ti.count(tj)
-			}
+	for _, i := range t.uniques {
+		var in bool = false
+		for _, j := range s {
+			in = in || j.containsTag(i, true)
+		}
+
+		if !in {
+			s = append(s, i)
 		}
 	}
 

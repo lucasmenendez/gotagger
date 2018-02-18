@@ -1,9 +1,8 @@
 package gotagger
 
-import (
-	"regexp"
-	"strings"
-)
+import "strings"
+
+const similarityThreshold float32 = 0.55
 
 // Struct to define 'tag' object that contains its components and its score.
 type tag struct {
@@ -17,6 +16,35 @@ type byScore []tag
 func (ts byScore) Len() int           { return len(ts) }
 func (ts byScore) Swap(i, j int)      { ts[i], ts[j] = ts[j], ts[i] }
 func (ts byScore) Less(i, j int) bool { return ts[i].score > ts[j].score }
+
+func strCompare(s1, s2 string) float32 {
+	var (
+		cs1 []string = strings.Split(s1, "")
+		cs2 []string = strings.Split(s2, "")
+		bs1 [][]string = ngrams(cs1, 2)
+		bs2 [][]string = ngrams(cs2, 2)
+		u float32 = float32(len(cs1) + len(cs2))
+		c float32
+	)
+
+	for _, p1 := range bs1 {
+		for _, p2 := range bs2 {
+			if p1[0] == p2[0] && p1[1] == p2[1] {
+				c++
+			}
+		}
+	}
+
+	return 2.0 * c / u
+}
+
+func (t tag) similar(i tag) bool {
+	var _ct string = strings.ToLower(strings.Join(t.components, " "))
+	var _ci string = strings.ToLower(strings.Join(i.components, " "))
+
+	var coeff float32 = strCompare(_ct, _ci)
+	return coeff > similarityThreshold
+}
 
 // count function returns number of intersections between tags. Receives 'tag'.
 // Returns counter.
@@ -43,30 +71,8 @@ func (t tag) containsTag(i tag, strict bool) bool {
 		return false
 	}
 
-	var r int = t.count(i)
-	if strict {
-		return r == len(t.components)
-	}
-	return r > 0
-}
-
-// containsPattern function checks if 'tag' match with pattern. If 'strict' is
-// 'true' checks if each tag components match, else only if some component do.
-// Receives string 'pattern' and boolean 'strict' flag. Returns boolean.
-func (t tag) containsPattern(p string, strict bool) bool {
-	var re *regexp.Regexp = regexp.MustCompile(p)
-
-	var r int
-	for _, c := range t.components {
-		if re.MatchString(c) {
-			r++
-		}
-	}
-
-	if strict {
-		return r == len(t.components)
-	}
-	return r > 0
+	var u int = t.count(i)
+	return u == len(t.components)
 }
 
 // containsString function checks if 'tag' contain string. If 'strict' is 'true'
@@ -74,11 +80,10 @@ func (t tag) containsPattern(p string, strict bool) bool {
 // Receives string and boolean 'strict' flag. Returns boolean.
 func (t tag) containsString(s string, strict bool) bool {
 	var r int
-
-	_s := strings.ToLower(s)
+	var _cs string = strings.ToLower(s)
 	for _, c := range t.components {
 		_c := strings.ToLower(c)
-		if _c == _s {
+		if _c == _cs {
 			r++
 		}
 	}
@@ -86,5 +91,6 @@ func (t tag) containsString(s string, strict bool) bool {
 	if strict {
 		return r == len(t.components)
 	}
+
 	return r > 0
 }

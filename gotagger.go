@@ -12,10 +12,8 @@ func GetTags(txt [][]string, lang string, max int) (tags [][]string, e error) {
 		tokens = append(tokens, s...)
 	}
 
-	var n [][]string = ngramsRecursive(tokens, 3)
-
 	var t *tagger
-	if t, e = newTagger(n, lang); e != nil {
+	if t, e = newTagger(tokens, lang); e != nil {
 		return tags, e
 	}
 
