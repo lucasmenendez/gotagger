@@ -37,7 +37,7 @@ func newTagger(words [][]string, code string) (t *tagger, err error) {
 	return t, err
 }
 
-// prepare funtion delete special symbols from each tag from tagger. Then check if each tag contains stopwords
+// prepare function delete special symbols from each tag from tagger. Then check if each tag contains stopwords
 // in boundary components.
 func (t *tagger) prepare() {
 	var rgx *regexp.Regexp = regexp.MustCompile(`(\s|"|\.\.\.|\.|,|:|\(|\)|\[|\]|\{|\}|¿|\?|¡|\!|[0-9]+\.[0-9]+)`)
