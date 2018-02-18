@@ -74,8 +74,8 @@ func TestContainsString(t *testing.T) {
 
 func TestTagsSorting(t *testing.T) {
 	var (
-		tags     []tag = []tag{tag{score: 1}, tag{score: 3}, tag{score: 2}}
-		expected []tag = []tag{tag{score: 3}, tag{score: 2}, tag{score: 1}}
+		tags     []tag = []tag{{score: 1}, {score: 3}, {score: 2}}
+		expected []tag = []tag{{score: 3}, {score: 2}, {score: 1}}
 	)
 
 	sort.Sort(byScore(tags))

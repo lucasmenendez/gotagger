@@ -8,7 +8,7 @@ import (
 )
 
 var supported = map[string][]string{
-	"es": []string{"a", "al", "algo", "algunas", "algunos", "ante", "antes", "como", "con", "contra", "cual", "cuando",
+	"es": {"a", "al", "algo", "algunas", "algunos", "ante", "antes", "como", "con", "contra", "cual", "cuando",
 		"de", "del", "desde", "donde", "durante", "e", "el", "ella", "ellas", "ellos", "en", "entre", "era", "erais",
 		"eran", "eras", "eres", "es", "esa", "esas", "ese", "eso", "esos", "esta", "estaba", "estabais", "estaban",
 		"estabas", "estad", "estada", "estadas", "estado", "estados", "estamos", "estando", "estar", "estaremos",
@@ -37,7 +37,7 @@ var supported = map[string][]string{
 		"tuyo", "tuyos", "tú", "un", "una", "uno", "unos", "vosotras", "vosotros", "vuestra", "vuestras", "vuestro",
 		"vuestros", "y", "ya", "yo", "él", "éramos",
 	},
-	"en": []string{"a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are",
+	"en": {"a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are",
 		"aren't", "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "but", "by",
 		"can't", "cannot", "could", "couldn't", "did", "didn't", "do", "does", "doesn't", "doing", "don't", "down",
 		"during", "each", "few", "for", "from", "further", "had", "hadn't", "has", "hasn't", "have", "haven't",

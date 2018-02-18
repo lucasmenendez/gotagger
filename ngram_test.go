@@ -7,16 +7,16 @@ func TestNgrams(t *testing.T) {
 	var input []string = []string{"Go", "(", "often", "referred", "to", "as", "golang", ")", "is", "a", "programming", "language"}
 
 	var expected [][]string = [][]string{
-		[]string{"Go", "(", "often"},
-		[]string{"(", "often", "referred"},
-		[]string{"often", "referred", "to"},
-		[]string{"referred", "to", "as"},
-		[]string{"to", "as", "golang"},
-		[]string{"as", "golang", ")"},
-		[]string{"golang", ")", "is"},
-		[]string{")", "is", "a"},
-		[]string{"is", "a", "programming"},
-		[]string{"a", "programming", "language"},
+		{"Go", "(", "often"},
+		{"(", "often", "referred"},
+		{"often", "referred", "to"},
+		{"referred", "to", "as"},
+		{"to", "as", "golang"},
+		{"as", "golang", ")"},
+		{"golang", ")", "is"},
+		{")", "is", "a"},
+		{"is", "a", "programming"},
+		{"a", "programming", "language"},
 	}
 
 	var results [][]string = ngrams(input, n)
@@ -44,18 +44,18 @@ func TestNgramsRecursive(t *testing.T) {
 	var input []string = []string{"Go", "is", "a", "programming", "language"}
 
 	var expected [][]string = [][]string{
-		[]string{"Go", "is", "a"},
-		[]string{"is", "a", "programming"},
-		[]string{"a", "programming", "language"},
-		[]string{"Go", "is"},
-		[]string{"is", "a"},
-		[]string{"a", "programming"},
-		[]string{"programming", "language"},
-		[]string{"Go"},
-		[]string{"is"},
-		[]string{"a"},
-		[]string{"programming"},
-		[]string{"language"},
+		{"Go", "is", "a"},
+		{"is", "a", "programming"},
+		{"a", "programming", "language"},
+		{"Go", "is"},
+		{"is", "a"},
+		{"a", "programming"},
+		{"programming", "language"},
+		{"Go"},
+		{"is"},
+		{"a"},
+		{"programming"},
+		{"language"},
 	}
 
 	var results [][]string = ngramsRecursive(input, n)
