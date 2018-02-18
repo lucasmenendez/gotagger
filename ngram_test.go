@@ -4,19 +4,19 @@ import "testing"
 
 func TestNgrams(t *testing.T) {
 	var n int = 3
-	var input []string = []string{ "Go", "(", "often", "referred", "to", "as", "golang", ")", "is", "a", "programming", "language" }
+	var input []string = []string{"Go", "(", "often", "referred", "to", "as", "golang", ")", "is", "a", "programming", "language"}
 
 	var expected [][]string = [][]string{
-		[]string{ "Go", "(", "often" },
-		[]string{ "(", "often", "referred" },
-		[]string{ "often", "referred", "to" },
-		[]string{ "referred", "to", "as" },
-		[]string{ "to", "as", "golang" },
-		[]string{ "as", "golang", ")" },
-		[]string{ "golang", ")", "is" },
-		[]string{ ")", "is", "a" },
-		[]string{ "is", "a", "programming" },
-		[]string{ "a", "programming", "language" },
+		[]string{"Go", "(", "often"},
+		[]string{"(", "often", "referred"},
+		[]string{"often", "referred", "to"},
+		[]string{"referred", "to", "as"},
+		[]string{"to", "as", "golang"},
+		[]string{"as", "golang", ")"},
+		[]string{"golang", ")", "is"},
+		[]string{")", "is", "a"},
+		[]string{"is", "a", "programming"},
+		[]string{"a", "programming", "language"},
 	}
 
 	var results [][]string = ngrams(input, n)
@@ -41,21 +41,21 @@ func TestNgrams(t *testing.T) {
 
 func TestNgramsRecursive(t *testing.T) {
 	var n int = 3
-	var input []string = []string{ "Go", "is", "a", "programming", "language" }
+	var input []string = []string{"Go", "is", "a", "programming", "language"}
 
 	var expected [][]string = [][]string{
-		[]string{ "Go", "is", "a" },
-		[]string{ "is", "a", "programming" },
-		[]string{ "a", "programming", "language" },
-		[]string{ "Go", "is" },
-		[]string{ "is", "a" },
-		[]string{ "a", "programming" },
-		[]string{ "programming", "language" },
-		[]string{ "Go" },
-		[]string{ "is" },
-		[]string{ "a" },
-		[]string{ "programming" },
-		[]string{ "language" },
+		[]string{"Go", "is", "a"},
+		[]string{"is", "a", "programming"},
+		[]string{"a", "programming", "language"},
+		[]string{"Go", "is"},
+		[]string{"is", "a"},
+		[]string{"a", "programming"},
+		[]string{"programming", "language"},
+		[]string{"Go"},
+		[]string{"is"},
+		[]string{"a"},
+		[]string{"programming"},
+		[]string{"language"},
 	}
 
 	var results [][]string = ngramsRecursive(input, n)

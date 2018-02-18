@@ -1,13 +1,13 @@
 package gotagger
 
 import (
-	"testing"
 	"sort"
+	"testing"
 )
 
 func TestCount(t *testing.T) {
-	var t1 tag = tag{ []string{ "programing", "language" }, 0}
-	var t2 tag = tag{ []string{ "a", "programing", "language" }, 0}
+	var t1 tag = tag{[]string{"programing", "language"}, 0}
+	var t2 tag = tag{[]string{"a", "programing", "language"}, 0}
 
 	if expected, result := 2, t2.count(t1); expected != result {
 		t.Errorf("Expected 2, got %d", result)
@@ -15,8 +15,8 @@ func TestCount(t *testing.T) {
 }
 
 func TestContainsTag(t *testing.T) {
-	var t1 tag = tag{ []string{ "programing", "language" }, 0}
-	var t2 tag = tag{ []string{ "a", "programing", "language" }, 0}
+	var t1 tag = tag{[]string{"programing", "language"}, 0}
+	var t2 tag = tag{[]string{"a", "programing", "language"}, 0}
 
 	if match := t1.containsTag(t2, false); !match {
 		t.Error("Expected true, got false")
@@ -28,7 +28,7 @@ func TestContainsTag(t *testing.T) {
 }
 
 func TestContainsPattern(t *testing.T) {
-	var t1 tag = tag{ []string{ "go", "golang" }, 0}
+	var t1 tag = tag{[]string{"go", "golang"}, 0}
 	var p1 string = `(lang)$`
 	var p2 string = `^(go)|(lang)$`
 
@@ -50,8 +50,8 @@ func TestContainsPattern(t *testing.T) {
 }
 
 func TestContainsString(t *testing.T) {
-	var t1 tag = tag{ []string{ "programing", "language" }, 0}
-	var t2 tag = tag{ []string{ "golang" }, 0}
+	var t1 tag = tag{[]string{"programing", "language"}, 0}
+	var t2 tag = tag{[]string{"golang"}, 0}
 	var s1 string = `programing`
 	var s2 string = `golang`
 
@@ -74,8 +74,8 @@ func TestContainsString(t *testing.T) {
 
 func TestTagsSorting(t *testing.T) {
 	var (
-		tags []tag = []tag{ tag{ score: 1 }, tag{ score: 3 }, tag{ score: 2 } }
-		expected []tag = []tag{ tag{ score: 3 }, tag{ score: 2 }, tag{ score: 1 } }
+		tags     []tag = []tag{tag{score: 1}, tag{score: 3}, tag{score: 2}}
+		expected []tag = []tag{tag{score: 3}, tag{score: 2}, tag{score: 1}}
 	)
 
 	sort.Sort(byScore(tags))

@@ -1,9 +1,9 @@
 package gotagger
 
 import (
-	"testing"
 	"os"
 	"path/filepath"
+	"testing"
 )
 
 func TestLoadLanguage(t *testing.T) {

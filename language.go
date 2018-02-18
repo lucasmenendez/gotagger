@@ -1,23 +1,23 @@
 package gotagger
 
 import (
-	"os"
-	"errors"
 	"bufio"
+	"errors"
+	"os"
 	"path/filepath"
 )
 
 var supported = map[string][]string{
-	"es": []string{ "a", "al", "algo", "algunas", "algunos", "ante", "antes", "como", "con", "contra", "cual", "cuando",
+	"es": []string{"a", "al", "algo", "algunas", "algunos", "ante", "antes", "como", "con", "contra", "cual", "cuando",
 		"de", "del", "desde", "donde", "durante", "e", "el", "ella", "ellas", "ellos", "en", "entre", "era", "erais",
 		"eran", "eras", "eres", "es", "esa", "esas", "ese", "eso", "esos", "esta", "estaba", "estabais", "estaban",
 		"estabas", "estad", "estada", "estadas", "estado", "estados", "estamos", "estando", "estar", "estaremos",
 		"estará", "estarán", "estarás", "estaré", "estaréis", "estaría", "estaríais", "estaríamos", "estarían",
-		"estarías", "estas","este", "estemos", "esto", "estos", "estoy", "estuve", "estuviera", "estuvierais",
-		"estuvieran", "estuvieras","estuvieron", "estuviese", "estuvieseis", "estuviesen", "estuvieses", "estuvimos",
+		"estarías", "estas", "este", "estemos", "esto", "estos", "estoy", "estuve", "estuviera", "estuvierais",
+		"estuvieran", "estuvieras", "estuvieron", "estuviese", "estuvieseis", "estuviesen", "estuvieses", "estuvimos",
 		"estuviste", "estuvisteis", "estuviéramos", "estuviésemos", "estuvo", "está", "estábamos", "estáis", "están",
 		"estás", "esté", "estéis", "estén", "estés", "fue", "fuera", "fuerais", "fueran", "fueras", "fueron", "fuese",
-		"fueseis", "fuesen", "fueses","fui", "fuimos", "fuiste", "fuisteis", "fuéramos", "fuésemos", "ha", "habida",
+		"fueseis", "fuesen", "fueses", "fui", "fuimos", "fuiste", "fuisteis", "fuéramos", "fuésemos", "ha", "habida",
 		"habidas", "habido", "habidos", "habiendo", "habremos", "habrá", "habrán", "habrás", "habré", "habréis",
 		"habría", "habríais", "habríamos", "habrían", "habrías", "habéis", "había", "habíais", "habíamos", "habían",
 		"habías", "han", "has", "hasta", "hay", "haya", "hayamos", "hayan", "hayas", "hayáis", "he", "hemos", "hube",
@@ -31,13 +31,13 @@ var supported = map[string][]string{
 		"suyas", "suyo", "suyos", "sí", "también", "tanto", "te", "tendremos", "tendrá", "tendrán", "tendrás", "tendré",
 		"tendréis", "tendría", "tendríais", "tendríamos", "tendrían", "tendrías", "tened", "tenemos", "tenga",
 		"tengamos", "tengan", "tengas", "tengo", "tengáis", "tenida", "tenidas", "tenido", "tenidos", "teniendo",
-		"tenéis", "tenía", "teníais", "teníamos", "tenían", "tenías", "ti","tiene", "tienen", "tienes", "todo", "todos",
+		"tenéis", "tenía", "teníais", "teníamos", "tenían", "tenías", "ti", "tiene", "tienen", "tienes", "todo", "todos",
 		"tu", "tus", "tuve", "tuviera", "tuvierais", "tuvieran", "tuvieras", "tuvieron", "tuviese", "tuvieseis",
 		"tuviesen", "tuvieses", "tuvimos", "tuviste", "tuvisteis", "tuviéramos", "tuviésemos", "tuvo", "tuya", "tuyas",
 		"tuyo", "tuyos", "tú", "un", "una", "uno", "unos", "vosotras", "vosotros", "vuestra", "vuestras", "vuestro",
 		"vuestros", "y", "ya", "yo", "él", "éramos",
 	},
-	"en": []string{ "a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are",
+	"en": []string{"a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are",
 		"aren't", "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "but", "by",
 		"can't", "cannot", "could", "couldn't", "did", "didn't", "do", "does", "doesn't", "doing", "don't", "down",
 		"during", "each", "few", "for", "from", "further", "had", "hadn't", "has", "hasn't", "have", "haven't",
@@ -56,7 +56,7 @@ var supported = map[string][]string{
 
 // Struct to define language object with its code and stopwords
 type language struct {
-	code string
+	code      string
 	stopwords []string
 }
 
@@ -91,5 +91,5 @@ func loadLanguage(code string) (language, error) {
 		}
 	}
 
-	return language{ code , stopwords}, nil
+	return language{code, stopwords}, nil
 }

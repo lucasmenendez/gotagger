@@ -1,9 +1,9 @@
 package gotagger
 
 import (
+	"errors"
 	"regexp"
 	"strings"
-	"errors"
 )
 
 // Struct to define 'tagger' with tag candidates and language definition
@@ -27,11 +27,11 @@ func newTagger(words [][]string, code string) (t *tagger, err error) {
 	var tags []tag
 	for _, w := range words {
 		if len(w) > 0 {
-			tags = append(tags, tag{ w, 0 })
+			tags = append(tags, tag{w, 0})
 		}
 	}
 
-	t = &tagger{ lang, tags }
+	t = &tagger{lang, tags}
 	t.prepare()
 
 	return t, err
@@ -74,7 +74,7 @@ func (t *tagger) prepare() {
 		} else {
 			var (
 				_cs string = strings.ToLower(item.components[0])
-				_ce string = strings.ToLower(item.components[len(item.components) - 1])
+				_ce string = strings.ToLower(item.components[len(item.components)-1])
 			)
 
 			for _, stopword := range t.lang.stopwords {

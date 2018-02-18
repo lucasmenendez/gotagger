@@ -1,8 +1,8 @@
 package gotagger
 
 import (
-	"testing"
 	"sort"
+	"testing"
 )
 
 func TestPrepare(t *testing.T) {
@@ -10,19 +10,19 @@ func TestPrepare(t *testing.T) {
 		t.Errorf("Expected nil, got %s", err.Error())
 	} else {
 		var tags []tag = []tag{
-			tag{ []string{ "Go", "or", "golang" }, 0 },
-			tag{ []string{ "or", "golang", "is" }, 0 },
-			tag{ []string{ "golang", "is", "a" }, 0 },
-			tag{ []string{ "is", "a", "programing" }, 0 },
-			tag{ []string{ "a", "programing", "language" }, 0 },
-			tag{ []string{ "programing", "language", "." }, 0 },
+			tag{[]string{"Go", "or", "golang"}, 0},
+			tag{[]string{"or", "golang", "is"}, 0},
+			tag{[]string{"golang", "is", "a"}, 0},
+			tag{[]string{"is", "a", "programing"}, 0},
+			tag{[]string{"a", "programing", "language"}, 0},
+			tag{[]string{"programing", "language", "."}, 0},
 		}
-		var tgr *tagger = &tagger{ lang, tags }
+		var tgr *tagger = &tagger{lang, tags}
 		tgr.prepare()
 
 		var expected []tag = []tag{
-			tag{ []string{ "Go", "or", "golang" }, 0 },
-			tag{ []string{ "programing", "language" }, 0 },
+			tag{[]string{"Go", "or", "golang"}, 0},
+			tag{[]string{"programing", "language"}, 0},
 		}
 
 		if len(tgr.tags) != len(expected) {
@@ -53,12 +53,12 @@ func TestNewTagger(t *testing.T) {
 	}
 
 	var words [][]string = [][]string{
-		[]string{ "Go", "or", "golang" },
-		[]string{ "or", "golang", "is" },
-		[]string{ "golang", "is", "a" },
-		[]string{ "is", "a", "programing" },
-		[]string{ "a", "programing", "language" },
-		[]string{ "programing", "language", "." },
+		[]string{"Go", "or", "golang"},
+		[]string{"or", "golang", "is"},
+		[]string{"golang", "is", "a"},
+		[]string{"is", "a", "programing"},
+		[]string{"a", "programing", "language"},
+		[]string{"programing", "language", "."},
 	}
 
 	if tgr, err := newTagger(words, "en"); err != nil {
@@ -66,8 +66,8 @@ func TestNewTagger(t *testing.T) {
 	} else {
 		var tags []tag = tgr.tags
 		var expected []tag = []tag{
-			tag{ []string{ "Go", "or", "golang" }, 0 },
-			tag{ []string{ "programing", "language" }, 0 },
+			tag{[]string{"Go", "or", "golang"}, 0},
+			tag{[]string{"programing", "language"}, 0},
 		}
 
 		for i, t1 := range tags {
@@ -90,18 +90,18 @@ func TestNewTagger(t *testing.T) {
 
 func TestScore(t *testing.T) {
 	var words [][]string = [][]string{
-		[]string{ "Go", "or", "golang" },
-		[]string{ "or", "golang", "is" },
-		[]string{ "golang", "is", "a" },
-		[]string{ "is", "a", "programing" },
-		[]string{ "a", "programing", "language" },
-		[]string{ "programing", "language", "." },
-		[]string{ "Go", "or", "golang" },
-		[]string{ "or", "golang", "is" },
-		[]string{ "golang", "is", "a" },
-		[]string{ "is", "a", "programing" },
-		[]string{ "a", "programing", "language" },
-		[]string{ "programing", "language", "." },
+		[]string{"Go", "or", "golang"},
+		[]string{"or", "golang", "is"},
+		[]string{"golang", "is", "a"},
+		[]string{"is", "a", "programing"},
+		[]string{"a", "programing", "language"},
+		[]string{"programing", "language", "."},
+		[]string{"Go", "or", "golang"},
+		[]string{"or", "golang", "is"},
+		[]string{"golang", "is", "a"},
+		[]string{"is", "a", "programing"},
+		[]string{"a", "programing", "language"},
+		[]string{"programing", "language", "."},
 	}
 
 	if tgr, err := newTagger(words, "en"); err != nil {
@@ -112,8 +112,8 @@ func TestScore(t *testing.T) {
 
 		var tags []tag = temp[:2]
 		var expected []tag = []tag{
-			tag{ []string{ "Go", "or", "golang" }, 1 },
-			tag{ []string{ "programing", "language" }, 1 },
+			tag{[]string{"Go", "or", "golang"}, 1},
+			tag{[]string{"programing", "language"}, 1},
 		}
 
 		for i, t1 := range tags {
@@ -131,4 +131,3 @@ func TestScore(t *testing.T) {
 		}
 	}
 }
-
