@@ -4,7 +4,7 @@ package gotagger
 import "sort"
 
 // GetTags function returns list of tags generating ngrams (from trigrams to unigrams) and count occurrences.
-// Recives list of tokens lists, language code and limit of tags. Return list of tags and error.
+// Receives list of tokens lists, language code and limit of tags. Return list of tags and error.
 func GetTags(text [][]string, lang string, limit int) (tags [][]string, err error) {
 	var tokens []string
 	for _, sentence := range text {
