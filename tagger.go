@@ -12,8 +12,8 @@ type tagger struct {
 	tags []tag
 }
 
-// Constructs a new 'tagger', converting words to tags and initializing language struct based on code recived.
-// Receives words matrix and language code. Return 'tagger' pointer and error.
+// newTagger function constructs a new 'tagger', converting words to tags and initializing language struct based
+// on code received. Receives words matrix and language code. Return 'tagger' pointer and error.
 func newTagger(words [][]string, code string) (t *tagger, err error) {
 	var lang language
 	if lang, err = loadLanguage(code); err != nil {
@@ -37,7 +37,8 @@ func newTagger(words [][]string, code string) (t *tagger, err error) {
 	return t, err
 }
 
-// Delete special symbols from each tag from tagger. Then check if each tag contains stopwords in boundary componentes.
+// prepare funtion delete special symbols from each tag from tagger. Then check if each tag contains stopwords
+// in boundary components.
 func (t *tagger) prepare() {
 	var rgx *regexp.Regexp = regexp.MustCompile(`(\s|"|\.\.\.|\.|,|:|\(|\)|\[|\]|\{|\}|¿|\?|¡|\!|[0-9]+\.[0-9]+)`)
 
@@ -91,8 +92,8 @@ func (t *tagger) prepare() {
 	t.tags = processed
 }
 
-// Score each tag from tagger, counting its occurrences. First obtains unique tags, then score all tags and them
-// assigns scores to same tag from unique list. Then weights multi word tag with individual scores.
+// score functions scores each tag from tagger, counting its occurrences. First obtains unique tags, then score all
+// tags and them assigns scores to same tag from unique list. Then weights multi word tag with individual scores.
 func (t *tagger) score() (scored []tag) {
 	var uniques []tag
 	for _, item := range t.tags {

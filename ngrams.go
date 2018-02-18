@@ -1,6 +1,6 @@
 package gotagger
 
-// Generates ngrams from list of tokens. Receive list of tokens and n value. Returns list of ngrams.
+// ngrams function generates ngrams from list of tokens. Receive list of tokens and n value. Returns list of ngrams.
 func ngrams(t []string, n int) (res [][]string) {
 	if n > 0 {
 		var limit int = len(t) - n + 1
@@ -12,7 +12,8 @@ func ngrams(t []string, n int) (res [][]string) {
 	return res
 }
 
-// Call ngrams function recursive, from n to 1. Receive list of tokens and n value. Returns list of ngrams.
+// ngramsRecursive functin calls ngrams function recursive, from n to 1. Receive list of tokens and n value.
+// Returns list of ngrams.
 func ngramsRecursive(t []string, n int) (res [][]string) {
 	if n > 0 {
 		for i := n; i >= 1; i-- {

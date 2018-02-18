@@ -1,9 +1,9 @@
-// Extract top occurrences words or group of words
+// Package gotagger extracts top occurrences words or group of words
 package gotagger
 
 import "sort"
 
-// Returns list of tags generating ngrams (from trigrams to unigrams) and count occurrences.
+// GetTags function returns list of tags generating ngrams (from trigrams to unigrams) and count occurrences.
 // Recives list of tokens lists, language code and limit of tags. Return list of tags and error.
 func GetTags(text [][]string, lang string, limit int) (tags [][]string, err error) {
 	var tokens []string

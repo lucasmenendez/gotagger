@@ -60,8 +60,8 @@ type language struct {
 	stopwords []string
 }
 
-// Loads language checking 'STOPWORDS' environment variable path and loading list from local storage if exists
-// or assigns default list. Receives language code. Return language struct or error.
+// loadLanguage function loads language checking 'STOPWORDS' environment variable path and loading list from local
+// storage if exists or assigns default list. Receives language code. Return language struct or error.
 func loadLanguage(code string) (language, error) {
 	var err error
 	var stopwords []string
