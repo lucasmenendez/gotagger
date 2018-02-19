@@ -1,4 +1,4 @@
-// tagger provides functions to get 'tags' from any text
+// Package gotagger provides functions to tag a text. The text must be tokenized.
 package gotagger
 
 import (

@@ -1,5 +1,3 @@
-// language provides multi language support and stopword detection. Contains
-// default stopwords in english and spanish.
 package gotagger
 
 import (
