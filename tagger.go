@@ -1,8 +1,10 @@
+// tagger provides functions to get 'tags' from any text
 package gotagger
 
 import (
 	"errors"
 	"regexp"
+	"sort"
 )
 
 // SYMBOL_PATTERN stores all symbol exception to omit
@@ -14,6 +16,30 @@ type tagger struct {
 	pattern    string
 	uniques    []tag
 	candidates []tag
+}
+
+// GetTags function returns list of tags generating ngrams (from trigrams to
+// unigrams) and count occurrences. Receives list of tokens,
+// language code and limit of tags. Return list of tags and error.
+func GetTags(txt []string, c string, max int) (tags [][]string, e error) {
+	var t *tagger
+	if t, e = newTagger(txt, c); e != nil {
+		return tags, e
+	}
+
+	s := t.score()
+	sort.Sort(byScore(s))
+
+	var l []tag = s
+	if len(s) > max {
+		l = l[:max]
+	}
+
+	for _, i := range l {
+		tags = append(tags, i.components)
+	}
+
+	return tags, e
 }
 
 // newTagger function constructs a new 'tagger', converting words to tags and

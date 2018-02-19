@@ -1,3 +1,5 @@
+// ngrams provides functions to generate ngrams, can be recursively, from list
+// of strings.
 package gotagger
 
 // ngrams function generates ngrams from list of tokens. Receive list of tokens

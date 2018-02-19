@@ -1,3 +1,5 @@
+// tag provides struct and functions to operate with multi word concepts,
+// compare and sort them
 package gotagger
 
 import "strings"
