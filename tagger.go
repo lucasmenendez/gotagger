@@ -5,6 +5,7 @@ import (
 	"regexp"
 )
 
+// SYMBOL_PATTERN stores all symbol exception to omit
 const SYMBOL_PATTERN string = `(\s|"|\.\.\.|\.|,|:|;|\(|\)|\[|\]|\{|\}|¿|\?|¡|\!|[0-9]+\.[0-9]+)`
 
 // Struct to define 'tagger' with tag candidates and language definition.
