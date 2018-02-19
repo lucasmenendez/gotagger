@@ -36,7 +36,6 @@ func TestContainsString(t *testing.T) {
 		t.Error("Expected true, got false")
 	}
 
-
 	if match := t1.containsString(s2); match {
 		t.Error("Expected false, got true")
 	}

@@ -3,16 +3,15 @@ package gotagger
 import (
 	"errors"
 	"regexp"
-	"strings"
 )
 
-const SYMBOL_PATTERN string =  `(\s|"|\.\.\.|\.|,|:|;|\(|\)|\[|\]|\{|\}|¿|\?|¡|\!|[0-9]+\.[0-9]+)`
+const SYMBOL_PATTERN string = `(\s|"|\.\.\.|\.|,|:|;|\(|\)|\[|\]|\{|\}|¿|\?|¡|\!|[0-9]+\.[0-9]+)`
 
 // Struct to define 'tagger' with tag candidates and language definition.
 type tagger struct {
-	lang language
-	pattern string
-	uniques []tag
+	lang       language
+	pattern    string
+	uniques    []tag
 	candidates []tag
 }
 
@@ -37,7 +36,7 @@ func newTagger(ws []string, code string) (t *tagger, e error) {
 		}
 	}
 
-	t = &tagger{ lang: l, pattern: SYMBOL_PATTERN }
+	t = &tagger{lang: l, pattern: SYMBOL_PATTERN}
 	var c []tag = t.clean(tags)
 	var s []tag = t.simplify(c)
 	t.prepare(s)
@@ -45,6 +44,8 @@ func newTagger(ws []string, code string) (t *tagger, e error) {
 	return t, e
 }
 
+// clean function remove special characters and symbols from any component of
+// each 'tag' received. Receives a 'tag' list. Return a cleaned 'tag' list.
 func (t *tagger) clean(tags []tag) (r []tag) {
 	var re *regexp.Regexp = regexp.MustCompile(t.pattern)
 
@@ -79,35 +80,40 @@ func (t *tagger) clean(tags []tag) (r []tag) {
 	return r
 }
 
+// simplify function reduce each 'tag' components deleting stopwords according
+// to 'tagger' language. Receives a 'tag' list. Returns a simplified 'tag' list.
 func (t *tagger) simplify(r []tag) (s []tag) {
 	for _, i := range r {
-		var in bool = false
-		if len(i.components) <= 2 {
-			for _, stw := range t.lang.stopwords {
-				in = in || i.containsString(stw, false)
-			}
-		} else {
-			var (
-				_cs string = strings.ToLower(i.components[0])
-				_ce string = strings.ToLower(i.components[len(i.components)-1])
-			)
-
-			for _, stopword := range t.lang.stopwords {
-				_s := strings.ToLower(stopword)
-				in = in || _s == _cs || _s == _ce
+		var _cs []string
+		for _, _c := range i.components {
+			if is := t.lang.isStopword(_c); !is {
+				_cs = append(_cs, _c)
+			} else if is && len(_cs) > 0 {
+				_cs = append(_cs, _c)
 			}
 		}
 
-		if !in {
-			s = append(s, i)
+		if len(_cs) > 0 {
+			var lim int
+			for lim = len(_cs); lim >= 0 && t.lang.isStopword(_cs[lim-1]); {
+				lim--
+			}
+
+			if lim > 0 {
+				var cs []string = _cs[:lim]
+				if len(cs) > 0 {
+					i.components = cs
+					s = append(s, i)
+				}
+			}
 		}
 	}
-
 	return s
 }
 
-// prepare function delete special symbols from each tag from tagger. Then check
-// if each tag contains stopwords in boundary components.
+// prepare function split 'tag' list provided into two lists. One  contains
+// uniques 'tag', and the other contains 'tag's with only one component to
+// count occurrences of each one faster. Receives a 'tag' list. No return.
 func (t *tagger) prepare(p []tag) {
 	var uqs, cdt []tag
 
@@ -130,13 +136,12 @@ func (t *tagger) prepare(p []tag) {
 	t.candidates = cdt
 }
 
-// score functions scores each tag from tagger, counting its occurrences. First
-// obtains unique tags, then score all tags and them assigns scores to same tag
-// from unique list. Then weights multi word tag with individual scores.
+// score functions scores each candidate 'tag' counting its occurrences. Then,
+// add that scores to all similar unique 'tag'. Return a scored 'tag' list.
 func (t *tagger) score() (s []tag) {
 	for i, ti := range t.candidates {
 		for j, tj := range t.candidates {
-			if j != i && ti.similar(tj) {
+			if j != i && ti.isSimilar(tj) {
 				ti.score += 1
 			}
 		}
@@ -146,9 +151,8 @@ func (t *tagger) score() (s []tag) {
 		}
 
 		for pos, u := range t.uniques {
-			if u.similar(ti) {
+			if u.isSimilar(ti) {
 				t.uniques[pos].score += ti.score
-				break
 			}
 		}
 	}
@@ -159,7 +163,7 @@ func (t *tagger) score() (s []tag) {
 			in = in || j.containsTag(i, true)
 		}
 
-		if !in {
+		if !in && i.score > 0 {
 			s = append(s, i)
 		}
 	}

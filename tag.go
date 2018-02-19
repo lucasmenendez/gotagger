@@ -17,14 +17,17 @@ func (ts byScore) Len() int           { return len(ts) }
 func (ts byScore) Swap(i, j int)      { ts[i], ts[j] = ts[j], ts[i] }
 func (ts byScore) Less(i, j int) bool { return ts[i].score > ts[j].score }
 
+// strCompare function implements "StrikeAMatch" string similarity algorithm
+// created by Simon White. You will find more information about algorithm here:
+// http://www.catalysoft.com/articles/StrikeAMatch.html
 func strCompare(s1, s2 string) float32 {
 	var (
-		cs1 []string = strings.Split(s1, "")
-		cs2 []string = strings.Split(s2, "")
+		cs1 []string   = strings.Split(s1, "")
+		cs2 []string   = strings.Split(s2, "")
 		bs1 [][]string = ngrams(cs1, 2)
 		bs2 [][]string = ngrams(cs2, 2)
-		u float32 = float32(len(cs1) + len(cs2))
-		c float32
+		u   float32    = float32(len(cs1)+len(cs2)) - 2
+		c   int
 	)
 
 	for _, p1 := range bs1 {
@@ -35,12 +38,15 @@ func strCompare(s1, s2 string) float32 {
 		}
 	}
 
-	return 2.0 * c / u
+	return (2.0 * float32(c)) / u
 }
 
-func (t tag) similar(i tag) bool {
-	var _ct string = strings.ToLower(strings.Join(t.components, " "))
-	var _ci string = strings.ToLower(strings.Join(i.components, " "))
+// isSimilar function check if 'tag' provided is similar to current tag.
+// If both tags have a similarity coefficient greater than threshold, it will
+// return true. Receives a 'tag'. Return boolean.
+func (t tag) isSimilar(i tag) bool {
+	var _ct string = strings.ToLower(strings.Join(t.components, ""))
+	var _ci string = strings.ToLower(strings.Join(i.components, ""))
 
 	var coeff float32 = strCompare(_ct, _ci)
 	return coeff > similarityThreshold
@@ -75,10 +81,9 @@ func (t tag) containsTag(i tag, strict bool) bool {
 	return u == len(t.components)
 }
 
-// containsString function checks if 'tag' contain string. If 'strict' is 'true'
-// checks if each tag components contain it, else only if some component do.
+// containsString function checks if any 'tag' component contains string.
 // Receives string and boolean 'strict' flag. Returns boolean.
-func (t tag) containsString(s string, strict bool) bool {
+func (t tag) containsString(s string) bool {
 	var r int
 	var _cs string = strings.ToLower(s)
 	for _, c := range t.components {
@@ -86,10 +91,6 @@ func (t tag) containsString(s string, strict bool) bool {
 		if _c == _cs {
 			r++
 		}
-	}
-
-	if strict {
-		return r == len(t.components)
 	}
 
 	return r > 0

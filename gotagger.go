@@ -4,16 +4,11 @@ package gotagger
 import "sort"
 
 // GetTags function returns list of tags generating ngrams (from trigrams to
-// unigrams) and count occurrences. Receives list of tokens lists,
+// unigrams) and count occurrences. Receives list of tokens,
 // language code and limit of tags. Return list of tags and error.
-func GetTags(txt [][]string, lang string, max int) (tags [][]string, e error) {
-	var tokens []string
-	for _, s := range txt {
-		tokens = append(tokens, s...)
-	}
-
+func GetTags(txt []string, c string, max int) (tags [][]string, e error) {
 	var t *tagger
-	if t, e = newTagger(tokens, lang); e != nil {
+	if t, e = newTagger(txt, c); e != nil {
 		return tags, e
 	}
 

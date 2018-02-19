@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 var supported = map[string][]string{
@@ -19,7 +20,7 @@ var supported = map[string][]string{
 		"estarías", "estas", "este", "estemos", "esto", "estos", "estoy",
 		"estuve", "estuviera", "estuvierais", "estuvieran", "estuvieras",
 		"estuvieron", "estuviese", "estuvieseis", "estuviesen", "estuvieses",
-		"estuvimos",   "estuviste", "estuvisteis", "estuviéramos",
+		"estuvimos", "estuviste", "estuvisteis", "estuviéramos",
 		"estuviésemos", "estuvo", "está", "estábamos", "estáis", "están",
 		"estás", "esté", "estéis", "estén", "estés", "fue", "fuera", "fuerais",
 		"fueran", "fueras", "fueron", "fuese", "fueseis", "fuesen", "fueses",
@@ -88,7 +89,7 @@ type language struct {
 // variable path and loading list from local storage if exists or assigns
 // default list. Receives language code. Return language struct or error.
 func loadLanguage(code string) (l language, e error) {
-	l = language{ code, []string{} }
+	l = language{code, []string{}}
 
 	if env := os.Getenv("STOPWORDS"); env != "" {
 		var f string = filepath.Join(env, code)
@@ -117,4 +118,14 @@ func loadLanguage(code string) (l language, e error) {
 	}
 
 	return l, e
+}
+
+func (l language) isStopword(s string) bool {
+	var is bool = false
+	var _s string = strings.ToLower(s)
+	for _, stw := range l.stopwords {
+		is = is || stw == _s
+	}
+
+	return is
 }
