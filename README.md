@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/lucasmenendez/gotagger.svg?branch=master)](https://travis-ci.org/lucasmenendez/gotagger)
 [![Report](https://goreportcard.com/badge/github.com/lucasmenendez/gotagger)](https://goreportcard.com/report/github.com/lucasmenendez/gotagger)
 
-# Gotokenizer
+# Gotagger
 Simple keyword extraction
 
 ## Installation
