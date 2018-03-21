@@ -15,7 +15,7 @@ If you want to extend stopword list, create a file, named as language code, into
 Extended stopword lists can be found in [Stopwords ISO profile](https://github.com/stopwords-iso).
 
 ## Demo
-````go
+```go
 package main
 
 import (
@@ -40,4 +40,4 @@ func main() {
         fmt.Printf("%q\n", tags)
     }
 }
-````
+```

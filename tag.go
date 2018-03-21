@@ -2,7 +2,7 @@ package gotagger
 
 import "strings"
 
-const similarityThreshold float32 = 0.55
+const similarityThreshold float64 = 0.55
 
 // Struct to define 'tag' object that contains its components and its score.
 type tag struct {
@@ -20,13 +20,13 @@ func (ts byScore) Less(i, j int) bool { return ts[i].score > ts[j].score }
 // strCompare function implements "StrikeAMatch" string similarity algorithm
 // created by Simon White. You will find more information about algorithm here:
 // http://www.catalysoft.com/articles/StrikeAMatch.html
-func strCompare(s1, s2 string) float32 {
+func strCompare(s1, s2 string) float64 {
 	var (
 		cs1 []string   = strings.Split(s1, "")
 		cs2 []string   = strings.Split(s2, "")
 		bs1 [][]string = ngrams(cs1, 2)
 		bs2 [][]string = ngrams(cs2, 2)
-		u   float32    = float32(len(cs1)+len(cs2)) - 2
+		u   float64    = float64(len(cs1)+len(cs2)) - 2
 		c   int
 	)
 
@@ -38,7 +38,7 @@ func strCompare(s1, s2 string) float32 {
 		}
 	}
 
-	return (2.0 * float32(c)) / u
+	return (2.0 * float64(c)) / u
 }
 
 // isSimilar function check if 'tag' provided is similar to current tag.
@@ -48,7 +48,7 @@ func (t tag) isSimilar(i tag) bool {
 	var _ct string = strings.ToLower(strings.Join(t.components, ""))
 	var _ci string = strings.ToLower(strings.Join(i.components, ""))
 
-	var coeff float32 = strCompare(_ct, _ci)
+	var coeff float64 = strCompare(_ct, _ci)
 	return coeff > similarityThreshold
 }
 
