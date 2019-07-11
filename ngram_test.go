@@ -3,10 +3,10 @@ package gotagger
 import "testing"
 
 func TestNgrams(t *testing.T) {
-	var n int = 3
-	var input []string = []string{"Go", "(", "often", "referred", "to", "as", "golang", ")", "is", "a", "programming", "language"}
+	var n = 3
+	var input = []string{"Go", "(", "often", "referred", "to", "as", "golang", ")", "is", "a", "programming", "language"}
 
-	var expected [][]string = [][]string{
+	var expected = [][]string{
 		{"Go", "(", "often"},
 		{"(", "often", "referred"},
 		{"often", "referred", "to"},
@@ -19,7 +19,7 @@ func TestNgrams(t *testing.T) {
 		{"a", "programming", "language"},
 	}
 
-	var results [][]string = ngrams(input, n)
+	var results = ngrams(input, n)
 	if len(results) != len(expected) {
 		t.Errorf("Expect %d, got %d", len(expected), len(results))
 		return
@@ -40,10 +40,10 @@ func TestNgrams(t *testing.T) {
 }
 
 func TestNgramsRecursive(t *testing.T) {
-	var n int = 3
-	var input []string = []string{"Go", "is", "a", "programming", "language"}
+	var n = 3
+	var input = []string{"Go", "is", "a", "programming", "language"}
 
-	var expected [][]string = [][]string{
+	var expected = [][]string{
 		{"Go", "is", "a"},
 		{"is", "a", "programming"},
 		{"a", "programming", "language"},
@@ -58,7 +58,7 @@ func TestNgramsRecursive(t *testing.T) {
 		{"language"},
 	}
 
-	var results [][]string = ngramsRecursive(input, n)
+	var results = ngramsRecursive(input, n)
 	if len(results) != len(expected) {
 		t.Errorf("Expect %d, got %d", len(expected), len(results))
 		return

@@ -1,8 +1,10 @@
 package gotagger
 
-import "strings"
+import (
+	"strings"
+)
 
-const similarityThreshold float64 = 0.55
+const similarityThreshold = 0.75
 
 // Struct to define 'tag' object that contains its components and its score.
 type tag struct {
@@ -17,30 +19,6 @@ func (ts byScore) Len() int           { return len(ts) }
 func (ts byScore) Swap(i, j int)      { ts[i], ts[j] = ts[j], ts[i] }
 func (ts byScore) Less(i, j int) bool { return ts[i].score > ts[j].score }
 
-// strCompare function implements "StrikeAMatch" string similarity algorithm
-// created by Simon White. You will find more information about algorithm here:
-// http://www.catalysoft.com/articles/StrikeAMatch.html
-func strCompare(s1, s2 string) float64 {
-	var (
-		cs1 []string   = strings.Split(s1, "")
-		cs2 []string   = strings.Split(s2, "")
-		bs1 [][]string = ngrams(cs1, 2)
-		bs2 [][]string = ngrams(cs2, 2)
-		u   float64    = float64(len(cs1)+len(cs2)) - 2
-		c   int
-	)
-
-	for _, p1 := range bs1 {
-		for _, p2 := range bs2 {
-			if p1[0] == p2[0] && p1[1] == p2[1] {
-				c++
-			}
-		}
-	}
-
-	return (2.0 * float64(c)) / u
-}
-
 // isSimilar function check if 'tag' provided is similar to current tag.
 // If both tags have a similarity coefficient greater than threshold, it will
 // return true. Receives a 'tag'. Return boolean.
@@ -48,7 +26,10 @@ func (t tag) isSimilar(i tag) bool {
 	var _ct string = strings.ToLower(strings.Join(t.components, ""))
 	var _ci string = strings.ToLower(strings.Join(i.components, ""))
 
-	var coeff float64 = strCompare(_ct, _ci)
+	//var factor float64 = float64(len(t.components) + len(i.components)) / 2
+
+	var coeff = strDistance(_ct, _ci)
+	//fmt.Println(coeff / factor < similarityThreshold, coeff, factor, t.components, i.components)
 	return coeff > similarityThreshold
 }
 
@@ -56,10 +37,8 @@ func (t tag) isSimilar(i tag) bool {
 // Returns counter.
 func (t tag) count(i tag) (count int) {
 	for _, ct := range t.components {
-		_ct := strings.ToLower(ct)
 		for _, ci := range i.components {
-			_ci := strings.ToLower(ci)
-			if _ct == _ci {
+			if strDistance(ct, ci) > similarityThreshold {
 				count++
 				break
 			}
@@ -77,7 +56,7 @@ func (t tag) containsTag(i tag, strict bool) bool {
 		return false
 	}
 
-	var u int = t.count(i)
+	var u = t.count(i)
 	return u == len(t.components)
 }
 

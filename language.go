@@ -121,8 +121,8 @@ func loadLanguage(code string) (l language, e error) {
 }
 
 func (l language) isStopword(s string) bool {
-	var is bool = false
-	var _s string = strings.ToLower(s)
+	var is = false
+	var _s = strings.ToLower(s)
 	for _, stw := range l.stopwords {
 		is = is || stw == _s
 	}

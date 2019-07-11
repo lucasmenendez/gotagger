@@ -7,8 +7,8 @@ import (
 	"sort"
 )
 
-// SYMBOL_PATTERN stores all symbol exception to omit
-const SYMBOL_PATTERN string = `(\s|"|\.\.\.|\.|,|:|;|\(|\)|\[|\]|\{|\}|¿|\?|¡|\!|[0-9]+\.[0-9]+)`
+// SymbolPattern stores all symbol exception to omit
+const SymbolPattern = `(\s|"|\.\.\.|\.|,|:|;|\(|\)|\[|\]|\{|\}|¿|\?|¡|\!|[0-9]+\.[0-9]+)`
 
 // Struct to define 'tagger' with tag candidates and language definition.
 type tagger struct {
@@ -21,9 +21,9 @@ type tagger struct {
 // GetTags function returns list of tags generating ngrams (from trigrams to
 // unigrams) and count occurrences. Receives list of tokens,
 // language code and limit of tags. Return list of tags and error.
-func GetTags(txt []string, c string, max int) (tags [][]string, e error) {
+func GetTags(w []string, c string, max int) (tags [][]string, e error) {
 	var t *tagger
-	if t, e = newTagger(txt, c); e != nil {
+	if t, e = newTagger(w, c); e != nil {
 		return tags, e
 	}
 
@@ -56,16 +56,16 @@ func newTagger(ws []string, code string) (t *tagger, e error) {
 	}
 
 	var tags []tag
-	var ngrms [][]string = ngramsRecursive(ws, 3)
+	var ngrms = ngramsRecursive(ws, 3)
 	for _, w := range ngrms {
 		if len(w) > 0 {
 			tags = append(tags, tag{w, 0})
 		}
 	}
 
-	t = &tagger{lang: l, pattern: SYMBOL_PATTERN}
-	var c []tag = t.clean(tags)
-	var s []tag = t.simplify(c)
+	t = &tagger{lang: l, pattern: SymbolPattern}
+	var c = t.clean(tags)
+	var s = t.simplify(c)
 	t.prepare(s)
 
 	return t, e
@@ -127,7 +127,7 @@ func (t *tagger) simplify(r []tag) (s []tag) {
 			}
 
 			if lim > 0 {
-				var cs []string = _cs[:lim]
+				var cs = _cs[:lim]
 				if len(cs) > 0 {
 					i.components = cs
 					s = append(s, i)
@@ -149,7 +149,7 @@ func (t *tagger) prepare(p []tag) {
 			cdt = append(cdt, i)
 		}
 
-		var in bool = false
+		var in = false
 		for _, c := range uqs {
 			in = in || c.containsTag(i, true)
 		}
@@ -169,7 +169,7 @@ func (t *tagger) score() (s []tag) {
 	for i, ti := range t.candidates {
 		for j, tj := range t.candidates {
 			if j != i && ti.isSimilar(tj) {
-				ti.score += 1
+				ti.score++
 			}
 		}
 
@@ -185,7 +185,7 @@ func (t *tagger) score() (s []tag) {
 	}
 
 	for _, i := range t.uniques {
-		var in bool = false
+		var in = false
 		for _, j := range s {
 			in = in || j.containsTag(i, true)
 		}

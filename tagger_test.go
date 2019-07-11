@@ -7,9 +7,9 @@ import (
 
 func TestClean(t *testing.T) {
 	if lang, err := loadLanguage("en"); err != nil {
-		t.Errorf("Expected nil, got %s", err.Error())
+		t.Errorf("expected nil, got %s", err.Error())
 	} else {
-		var tags []tag = []tag{
+		var tags = []tag{
 			{[]string{"Go"}, 0},
 			{[]string{"or"}, 0},
 			{[]string{"golang"}, 0},
@@ -32,10 +32,10 @@ func TestClean(t *testing.T) {
 			{[]string{"a", "programing", "language"}, 0},
 			{[]string{"programing", "language", "."}, 0},
 		}
-		var tgr *tagger = &tagger{lang: lang, pattern: SYMBOL_PATTERN}
-		var cleaned []tag = tgr.clean(tags)
+		var tgr = &tagger{lang: lang, pattern: SymbolPattern}
+		var cleaned = tgr.clean(tags)
 
-		var expected []tag = []tag{
+		var expected = []tag{
 			{[]string{"Go"}, 0},
 			{[]string{"or"}, 0},
 			{[]string{"golang"}, 0},
@@ -59,14 +59,14 @@ func TestClean(t *testing.T) {
 		}
 
 		if len(cleaned) != len(expected) {
-			t.Errorf("Expected %d, got %d", len(expected), len(cleaned))
+			t.Errorf("expected %d, got %d", len(expected), len(cleaned))
 		}
 
 		for p, i := range cleaned {
-			var e tag = expected[p]
+			var e = expected[p]
 
 			if !i.containsTag(e, true) {
-				t.Errorf("Expected %q, got %q", e.components, i.components)
+				t.Errorf("expected %q, got %q", e.components, i.components)
 			}
 		}
 
@@ -80,15 +80,15 @@ func TestClean(t *testing.T) {
 
 		cleaned = tgr.clean(tags)
 		if len(cleaned) > 0 {
-			t.Errorf("Expected empty tags list, got len %d", len(cleaned))
+			t.Errorf("expected empty tags list, got len %d", len(cleaned))
 		}
 	}
 }
 func TestSimplify(t *testing.T) {
 	if lang, err := loadLanguage("en"); err != nil {
-		t.Errorf("Expected nil, got %s", err.Error())
+		t.Errorf("expected nil, got %s", err.Error())
 	} else {
-		var cleaned []tag = []tag{
+		var cleaned = []tag{
 			{[]string{"Go"}, 0},
 			{[]string{"or"}, 0},
 			{[]string{"golang"}, 0},
@@ -111,10 +111,10 @@ func TestSimplify(t *testing.T) {
 			{[]string{"programing", "language"}, 0},
 		}
 
-		var tgr *tagger = &tagger{lang: lang, pattern: SYMBOL_PATTERN}
-		var simplified []tag = tgr.simplify(cleaned)
+		var tgr = &tagger{lang: lang, pattern: SymbolPattern}
+		var simplified = tgr.simplify(cleaned)
 
-		var expected []tag = []tag{
+		var expected = []tag{
 			{[]string{"Go"}, 0},
 			{[]string{"golang"}, 0},
 			{[]string{"programing"}, 0},
@@ -134,22 +134,22 @@ func TestSimplify(t *testing.T) {
 		}
 
 		if len(simplified) != len(expected) {
-			t.Errorf("Expected %d, got %d", len(expected), len(simplified))
+			t.Errorf("expected %d, got %d", len(expected), len(simplified))
 		}
 
 		for p, i := range simplified {
-			var e tag = expected[p]
+			var e = expected[p]
 			if !i.containsTag(e, true) {
-				t.Errorf("Expected %q, got %q", e.components, i.components)
+				t.Errorf("expected %q, got %q", e.components, i.components)
 			}
 		}
 	}
 }
 func TestPrepare(t *testing.T) {
 	if lang, err := loadLanguage("en"); err != nil {
-		t.Errorf("Expected nil, got %s", err.Error())
+		t.Errorf("expected nil, got %s", err.Error())
 	} else {
-		var simplifiyed []tag = []tag{
+		var simplifiyed = []tag{
 			{[]string{"Go"}, 0},
 			{[]string{"golang"}, 0},
 			{[]string{"programing"}, 0},
@@ -168,10 +168,10 @@ func TestPrepare(t *testing.T) {
 			{[]string{"programing", "language"}, 0},
 		}
 
-		var tgr *tagger = &tagger{lang: lang, pattern: SYMBOL_PATTERN}
+		var tgr = &tagger{lang: lang, pattern: SymbolPattern}
 		tgr.prepare(simplifiyed)
 
-		var uniques []tag = []tag{
+		var uniques = []tag{
 			{[]string{"Go"}, 0},
 			{[]string{"golang"}, 0},
 			{[]string{"programing"}, 0},
@@ -180,7 +180,7 @@ func TestPrepare(t *testing.T) {
 			{[]string{"Go", "or", "golang"}, 0},
 		}
 
-		var candidates []tag = []tag{
+		var candidates = []tag{
 			{[]string{"Go"}, 0},
 			{[]string{"golang"}, 0},
 			{[]string{"programing"}, 0},
@@ -196,24 +196,24 @@ func TestPrepare(t *testing.T) {
 		}
 
 		if len(uniques) != len(tgr.uniques) {
-			t.Errorf("Expected %d, got %d", len(uniques), len(tgr.uniques))
+			t.Errorf("expected %d, got %d", len(uniques), len(tgr.uniques))
 		}
 
 		for p, i := range tgr.uniques {
-			var e tag = uniques[p]
+			var e = uniques[p]
 			if !i.containsTag(e, true) {
-				t.Errorf("Expected %q, got %q", e.components, i.components)
+				t.Errorf("expected %q, got %q", e.components, i.components)
 			}
 		}
 
 		if len(candidates) != len(tgr.candidates) {
-			t.Errorf("Expected %d, got %d", len(candidates), len(tgr.candidates))
+			t.Errorf("expected %d, got %d", len(candidates), len(tgr.candidates))
 		}
 
 		for p, i := range tgr.candidates {
-			var e tag = candidates[p]
+			var e = candidates[p]
 			if !i.containsTag(e, true) {
-				t.Errorf("Expected %q, got %q", e.components, i.components)
+				t.Errorf("expected %q, got %q", e.components, i.components)
 			}
 		}
 	}
@@ -221,14 +221,14 @@ func TestPrepare(t *testing.T) {
 
 func TestNewTagger(t *testing.T) {
 	if _, err := newTagger([]string{}, "en"); err == nil {
-		t.Error("Excected error, got nil")
+		t.Error("expected error, got nil")
 	}
 
-	var ws []string = []string{"Go", "or", "golang", "is", "a", "programing", "language", "."}
+	var ws = []string{"Go", "or", "golang", "is", "a", "programing", "language", "."}
 	if tgr, err := newTagger(ws, "en"); err != nil {
-		t.Errorf("Excected nil, got %s", err.Error())
+		t.Errorf("expected nil, got %s", err.Error())
 	} else {
-		var uniques []tag = []tag{
+		var uniques = []tag{
 			{[]string{"Go"}, 0},
 			{[]string{"golang"}, 0},
 			{[]string{"programing"}, 0},
@@ -237,7 +237,7 @@ func TestNewTagger(t *testing.T) {
 			{[]string{"Go", "or", "golang"}, 0},
 		}
 
-		var candidates []tag = []tag{
+		var candidates = []tag{
 			{[]string{"Go"}, 0},
 			{[]string{"golang"}, 0},
 			{[]string{"programing"}, 0},
@@ -253,47 +253,47 @@ func TestNewTagger(t *testing.T) {
 		}
 
 		if len(uniques) != len(tgr.uniques) {
-			t.Errorf("Expected %d, got %d", len(uniques), len(tgr.uniques))
+			t.Errorf("expected %d, got %d", len(uniques), len(tgr.uniques))
 		}
 
 		for _, i := range tgr.uniques {
-			var in bool = false
+			var in = false
 			for _, e := range uniques {
 				in = in || i.containsTag(e, true)
 			}
 
 			if !in {
-				t.Errorf("Expected %q", i.components)
+				t.Errorf("expected %q", i.components)
 			}
 		}
 
 		if len(candidates) != len(tgr.candidates) {
-			t.Errorf("Expected %d, got %d", len(candidates), len(tgr.candidates))
+			t.Errorf("expected %d, got %d", len(candidates), len(tgr.candidates))
 		}
 
 		for _, i := range tgr.candidates {
-			var in bool = false
+			var in = false
 			for _, e := range candidates {
 				in = in || i.containsTag(e, true)
 			}
 
 			if !in {
-				t.Errorf("Expected %q", i.components)
+				t.Errorf("expected %q", i.components)
 			}
 		}
 	}
 }
 
 func TestScore(t *testing.T) {
-	var ws []string = []string{"Go", "or", "golang", "is", "a", "programing", "language", "."}
+	var ws = []string{"Go", "or", "golang", "is", "a", "programing", "language", "."}
 
 	if tgr, err := newTagger(ws, "en"); err != nil {
-		t.Errorf("Expected nil, got %s", err.Error())
+		t.Errorf("expected nil, got %s", err.Error())
 	} else {
-		var scored []tag = tgr.score()
+		var scored = tgr.score()
 		sort.Sort(byScore(scored))
 
-		var expected []tag = []tag{
+		var expected = []tag{
 			{[]string{"Go", "or", "golang"}, 20},
 			{[]string{"golang"}, 20},
 			{[]string{"programing", "language"}, 8},
@@ -303,9 +303,9 @@ func TestScore(t *testing.T) {
 		}
 
 		for i, _s := range scored {
-			var _e tag = expected[i]
+			var _e = expected[i]
 			if !_s.containsTag(_e, true) {
-				t.Errorf("Expected (%d) %q, got (%d)%q", _e.score, _e.components, _s.score, _s.components)
+				t.Errorf("expected (%d) %q, got (%d)%q", _e.score, _e.components, _s.score, _s.components)
 			}
 		}
 	}
