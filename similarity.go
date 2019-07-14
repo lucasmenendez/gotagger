@@ -1,6 +1,6 @@
 package gotagger
 
-const scalingFactor float64 = 0.1
+const scalingFactor float64 = 0.08
 
 // jaroDistance functions implements Jaro String Similarity algorithm, that
 // determines how similar are two strings. Jaro Similarity returns value between

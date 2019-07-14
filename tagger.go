@@ -10,190 +10,61 @@ import (
 // SymbolPattern stores all symbol exception to omit
 const SymbolPattern = `(\s|"|\.\.\.|\.|,|:|;|\(|\)|\[|\]|\{|\}|¿|\?|¡|\!|[0-9]+\.[0-9]+)`
 
-// Struct to define 'tagger' with tag candidates and language definition.
-type tagger struct {
-	lang       language
-	pattern    string
-	uniques    []tag
-	candidates []tag
+func GetTags(text []string, code string, max int) (tags [][]string, err error) {
+	var lang language
+	if lang, err = loadLanguage(code); err != nil {
+		return
+	}
+
+	if len(text) == 0 {
+		return tags, errors.New("no words, provided")
+	}
+
+	ws, uws, cs := prepare(text, lang)
+	uws.calcFrecuencies(ws)
+	uws.calcDegrees(cs)
+	uws.calcScores()
+	cs.calcScores(uws)
+
+	tags = compose(cs, max)
+	return
 }
 
-// GetTags function returns list of tags generating ngrams (from trigrams to
-// unigrams) and count occurrences. Receives list of tokens,
-// language code and limit of tags. Return list of tags and error.
-func GetTags(w []string, c string, max int) (tags [][]string, e error) {
-	var t *tagger
-	if t, e = newTagger(w, c); e != nil {
-		return tags, e
-	}
+func prepare(text []string, lang language) (ws, uws words, cs candidates) {
+	var (
+		re      = regexp.MustCompile(SymbolPattern)
+		current = candidate{}
+	)
 
-	s := t.score()
-	sort.Sort(byScore(s))
+	for _, item := range text {
+		var w = &word{component: item, frecuency: 1}
+		var next = re.MatchString(item) || lang.isStopword(item)
 
-	var l []tag = s
-	if len(s) > max {
-		l = l[:max]
-	}
-
-	for _, i := range l {
-		tags = append(tags, i.components)
-	}
-
-	return tags, e
-}
-
-// newTagger function constructs a new 'tagger', converting words to tags and
-// initializing language struct based on code received. Receives words matrix
-// and language code. Return 'tagger' pointer and error.
-func newTagger(ws []string, code string) (t *tagger, e error) {
-	var l language
-	if l, e = loadLanguage(code); e != nil {
-		return &tagger{}, e
-	}
-
-	if len(ws) == 0 {
-		return t, errors.New("no words, provided")
-	}
-
-	var tags []tag
-	var ngrms = ngramsRecursive(ws, 3)
-	for _, w := range ngrms {
-		if len(w) > 0 {
-			tags = append(tags, tag{w, 0})
-		}
-	}
-
-	t = &tagger{lang: l, pattern: SymbolPattern}
-	var c = t.clean(tags)
-	var s = t.simplify(c)
-	t.prepare(s)
-
-	return t, e
-}
-
-// clean function remove special characters and symbols from any component of
-// each 'tag' received. Receives a 'tag' list. Return a cleaned 'tag' list.
-func (t *tagger) clean(tags []tag) (r []tag) {
-	var re *regexp.Regexp = regexp.MustCompile(t.pattern)
-
-	for _, i := range tags {
-		var _c []string
-
-		var min, max int = 0, len(i.components) - 1
-		for p, c := range i.components {
-			if re.MatchString(c) {
-				if p != min && p != max {
-					_c = []string{}
-					break
-				}
-
-				var candidate string = re.ReplaceAllString(c, "")
-				if candidate != "" {
-					c = candidate
-				} else {
-					continue
-				}
-			}
-
-			_c = append(_c, c)
-		}
-
-		if len(_c) > 0 {
-			i.components = _c
-			r = append(r, i)
-		}
-	}
-
-	return r
-}
-
-// simplify function reduce each 'tag' components deleting stopwords according
-// to 'tagger' language. Receives a 'tag' list. Returns a simplified 'tag' list.
-func (t *tagger) simplify(r []tag) (s []tag) {
-	for _, i := range r {
-		var _cs []string
-		for _, _c := range i.components {
-			if is := t.lang.isStopword(_c); !is {
-				_cs = append(_cs, _c)
-			} else if is && len(_cs) > 0 {
-				_cs = append(_cs, _c)
-			}
-		}
-
-		if len(_cs) > 0 {
-			var lim int
-			for lim = len(_cs); lim >= 0 && t.lang.isStopword(_cs[lim-1]); {
-				lim--
-			}
-
-			if lim > 0 {
-				var cs = _cs[:lim]
-				if len(cs) > 0 {
-					i.components = cs
-					s = append(s, i)
-				}
-			}
-		}
-	}
-	return s
-}
-
-// prepare function split 'tag' list provided into two lists. One  contains
-// uniques 'tag', and the other contains 'tag's with only one component to
-// count occurrences of each one faster. Receives a 'tag' list. No return.
-func (t *tagger) prepare(p []tag) {
-	var uqs, cdt []tag
-
-	for _, i := range p {
-		if len(i.components) == 1 {
-			cdt = append(cdt, i)
-		}
-
-		var in = false
-		for _, c := range uqs {
-			in = in || c.containsTag(i, true)
-		}
-
-		if !in {
-			uqs = append(uqs, i)
-		}
-	}
-
-	t.uniques = uqs
-	t.candidates = cdt
-}
-
-// score functions scores each candidate 'tag' counting its occurrences. Then,
-// add that scores to all similar unique 'tag'. Return a scored 'tag' list.
-func (t *tagger) score() (s []tag) {
-	for i, ti := range t.candidates {
-		for j, tj := range t.candidates {
-			if j != i && ti.isSimilar(tj) {
-				ti.score++
-			}
-		}
-
-		if ti.score == 0 {
-			continue
-		}
-
-		for pos, u := range t.uniques {
-			if u.isSimilar(ti) {
-				t.uniques[pos].score += ti.score
+		if next && len(current.components) > 0 {
+			cs = append(cs, current)
+			current = candidate{}
+		} else if !next {
+			current.components = append(current.components, w)
+			ws = append(ws, w)
+			if !uws.includes(w) {
+				uws = append(uws, w)
 			}
 		}
 	}
 
-	for _, i := range t.uniques {
-		var in = false
-		for _, j := range s {
-			in = in || j.containsTag(i, true)
+	return
+}
+
+func compose(cs candidates, max int) (tags [][]string) {
+	sort.Sort(cs)
+	for _, c := range cs[:max] {
+		var tag []string
+		for _, w := range c.components {
+			tag = append(tag, w.component)
 		}
 
-		if !in && i.score > 0 {
-			s = append(s, i)
-		}
+		tags = append(tags, tag)
 	}
 
-	return s
+	return
 }
