@@ -4,7 +4,7 @@ import "strings"
 
 type word struct {
 	component                string
-	frecuency, degree, score float32
+	frequency, degree, score float32
 }
 
 type words []*word
@@ -29,13 +29,13 @@ func (ws words) includes(w *word) bool {
 	return false
 }
 
-func (ws words) calcFrecuencies(text words) {
+func (ws words) calcFrequencies(text words) {
 	for i, wi := range ws {
 		for j, wj := range text {
 			if i == j {
 				continue
 			} else if wi.isSimilar(wj) {
-				ws[i].frecuency++
+				ws[i].frequency++
 			}
 		}
 	}
@@ -53,6 +53,6 @@ func (ws words) calcDegrees(cs candidates) {
 
 func (ws words) calcScores() {
 	for i, w := range ws {
-		ws[i].score = w.degree / w.frecuency
+		ws[i].score = w.degree / w.frequency
 	}
 }

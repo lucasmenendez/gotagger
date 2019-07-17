@@ -20,8 +20,8 @@ func GetTags(text []string, code string, max int) (tags [][]string, err error) {
 		return tags, errors.New("no words, provided")
 	}
 
-	ws, uws, cs := prepare(text, lang)
-	uws.calcFrecuencies(ws)
+	ws, uws, cs := rake(text, lang)
+	uws.calcFrequencies(ws)
 	uws.calcDegrees(cs)
 	uws.calcScores()
 	cs.calcScores(uws)
@@ -30,22 +30,51 @@ func GetTags(text []string, code string, max int) (tags [][]string, err error) {
 	return
 }
 
-func prepare(text []string, lang language) (ws, uws words, cs candidates) {
+func bigrams(text []string, lang language) (ws, uws words, cs candidates) {
+	var re = regexp.MustCompile(SymbolPattern)
+
+	var _ws []string
+	for _, item := range text {
+		if !re.MatchString(item) && !lang.isStopword(item) {
+			_ws = append(_ws, item)
+
+			var w = &word{component: item}
+			if !uws.includes(w) {
+				uws = append(uws, w)
+			}
+		}
+	}
+
+	for _, bigram := range ngramsRecursive(_ws, 2) {
+		var components words
+		for _, component := range bigram {
+			components = append(components, &word{component: component, frequency: 1})
+		}
+
+		cs = append(cs, candidate{components: components})
+	}
+
+	return
+}
+
+func rake(text []string, lang language) (ws, uws words, cs candidates) {
 	var (
 		re      = regexp.MustCompile(SymbolPattern)
 		current = candidate{}
 	)
 
 	for _, item := range text {
-		var w = &word{component: item, frecuency: 1}
 		var next = re.MatchString(item) || lang.isStopword(item)
 
 		if next && len(current.components) > 0 {
 			cs = append(cs, current)
 			current = candidate{}
 		} else if !next {
+			var w = &word{component: item, frequency: 1}
+
 			current.components = append(current.components, w)
 			ws = append(ws, w)
+
 			if !uws.includes(w) {
 				uws = append(uws, w)
 			}
